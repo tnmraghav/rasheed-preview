@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E121B;color:#fff;font-family:'Archivo',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#7FC0EA;text-decoration:none}
+a:hover{color:#fff}
+*{box-sizing:border-box}
+::selection{background:#3F97D3;color:#0E121B}
+input::placeholder,textarea::placeholder{color:#6A7386}
+@keyframes rhiPing{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.4);opacity:0}}
+@keyframes rhiBreathe{0%,100%{transform:translate(-50%,-50%) scale(.5);opacity:.2}50%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes rhiCue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes rhiSpin{to{transform:rotate(360deg)}}
+@keyframes rhiPulse{0%,100%{box-shadow:0 0 0 0 rgba(127,192,234,.7)}60%{box-shadow:0 0 0 10px rgba(127,192,234,0)}}
+@keyframes rhiFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-10px)}}
+@media print{[data-loader]{display:none!important}}
+</style>
+</helmet>
+{{ loader }}
+<div data-progress="" style="position:fixed;left:0;top:0;right:0;height:3px;background:#3F97D3;transform-origin:left;transform:scaleX(0);z-index:60;pointer-events:none"></div>
+<sc-if value="{{ cursorOn }}" hint-placeholder-val="{{ false }}">
+  <div data-cur-ring="" style="position:fixed;left:0;top:0;width:40px;height:40px;border:1.5px solid #3F97D3;border-radius:50%;pointer-events:none;z-index:9999;transition:background .3s"></div>
+  <div data-cur-dot="" style="position:fixed;left:0;top:0;width:8px;height:8px;background:#7FC0EA;border-radius:50%;pointer-events:none;z-index:9999"></div>
+  <div data-cur-label="" style="position:fixed;left:0;top:0;pointer-events:none;z-index:10000;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#0E121B;font-weight:500;opacity:0;transition:opacity .2s"></div>
+</sc-if>
+
+<header data-nav="" style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px clamp(16px,3vw,40px);transition:transform .5s cubic-bezier(.2,.8,.2,1);pointer-events:none">
+  <div onClick="{{ goTop }}" data-magnet="" style="pointer-events:auto;cursor:pointer;background:#fff;width:68px;height:68px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <img src="assets/logo.jpeg" alt="RH International" style="width:62px;height:62px;display:block">
+  </div>
+  <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+    <nav style="pointer-events:auto;display:flex;gap:2px;background:rgba(14,18,27,.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:6px;border:1px solid rgba(255,255,255,.1)">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+        <div onClick="{{ n.go }}" style="cursor:pointer;padding:10px 14px;font-size:14px;font-weight:600;color:#fff;display:flex;gap:8px;align-items:baseline;transition:background .25s" style-hover="background:#2A78B3"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#7FC0EA">{{ n.num }}</span>{{ n.label }}</div>
+      </sc-for>
+    </nav>
+    <div onClick="{{ goContact }}" data-magnet="" style="pointer-events:auto;cursor:pointer;background:#3F97D3;color:#0E121B;padding:15px 22px;font-weight:700;font-size:14px;display:flex;gap:10px;align-items:center;flex-shrink:0">
+      <span style="width:8px;height:8px;border-radius:50%;background:#0E121B;display:block;animation:rhiPulse 2s infinite"></span>Let’s talk
+    </div>
+  </sc-if>
+  <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleMenu }}" style="pointer-events:auto;cursor:pointer;background:#3F97D3;color:#0E121B;padding:14px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">{{ menuLabel }}</div>
+  </sc-if>
+</header>
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:45;background:#0E121B;padding:120px 24px 32px;display:flex;flex-direction:column;justify-content:space-between;overflow:auto">
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+        <div data-reveal="{{ $index }}" onClick="{{ n.go }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid #232A38">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7FC0EA">{{ n.num }}</span>
+          <span style="font-size:clamp(34px,9vw,56px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.02em;line-height:1">{{ n.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <a href="mailto:fatima@rh-intl.com" style="font-size:20px;font-weight:600;color:#fff;padding-top:24px">fatima@rh-intl.com</a>
+  </div>
+</sc-if>
+
+<div style="position:relative;overflow-x:clip">
+
+<section id="top" data-screen-label="Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background:#0E121B">
+  <div style="position:absolute;inset:0">
+    <img src="https://static.wixstatic.com/media/nsplsh_2d4a64325856584c513055~mv2_d_5423_3615_s_4_2.jpg/v1/fill/w_1920,h_1280,al_c,q_85/hero.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35">
+    <video data-auto="" src="{{ heroVideo }}" data-alt="{{ heroAlt }}" autoplay="" loop="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;transition:opacity 1s"></video>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,18,27,.94) 0%,rgba(14,18,27,.7) 45%,rgba(14,18,27,.25) 100%)"></div>
+    <canvas data-ocean="" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,rgba(14,18,27,0),#0E121B)"></div>
+  </div>
+  <div style="position:relative;flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:32px;align-items:center;padding:clamp(120px,16vh,160px) clamp(20px,4vw,56px) 32px">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div data-hero-fade="" style="display:flex;align-items:center;gap:14px">
+        <span style="width:40px;height:2px;background:#3F97D3;display:block"></span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#CFE6F6">Rasheed Holdings International · Malta</span>
+      </div>
+      <h1 style="margin:0;font-size:clamp(40px,5.6vw,104px);line-height:.9;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.025em;display:flex;flex-direction:column">
+        <span style="overflow:hidden;display:block;padding-bottom:.04em"><span data-word="" style="display:inline-block">Cementing</span></span>
+        <span style="overflow:hidden;display:block;padding-bottom:.04em"><span data-word="" style="display:inline-block;color:transparent;-webkit-text-stroke:2px #7FC0EA">Legacies</span></span>
+        <span style="overflow:hidden;display:block;padding:.06em 0 .1em"><span data-word="" style="display:inline-block;font-size:.42em;font-stretch:100%;font-style:italic;font-weight:300;text-transform:none;letter-spacing:0;color:#CFE6F6">with continued</span></span>
+        <span style="overflow:hidden;display:block;padding-bottom:.04em"><span data-word="" style="display:inline-block">Excellence<span style="color:#3F97D3">.</span></span></span>
+      </h1>
+      <p data-hero-fade="" style="margin:0;font-size:clamp(16px,1.3vw,19px);line-height:1.6;max-width:540px;color:#D5DAE3;text-wrap:pretty">Guided by trust and integrity, Rasheed Holdings has built a solid foundation across global cement trading and shipping, international property management, and strategic financial investments.</p>
+      <div data-hero-fade="" style="display:flex;gap:12px;flex-wrap:wrap">
+        <div onClick="{{ goBusinesses }}" data-magnet="" style="cursor:pointer;background:#3F97D3;color:#0E121B;padding:17px 28px;font-weight:700;font-size:15px;white-space:nowrap">Explore our businesses →</div>
+        <div onClick="{{ goAbout }}" data-magnet="" style="cursor:pointer;border:1px solid rgba(255,255,255,.5);color:#fff;padding:16px 28px;font-weight:600;font-size:15px;white-space:nowrap">Who we are</div>
+      </div>
+    </div>
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <div data-hero-fade="" style="display:flex;justify-content:center">
+        <div data-orbit-box="" data-cursor="Orbit" onMouseEnter="{{ orbitEnter }}" onMouseLeave="{{ orbitLeave }}" style="position:relative;width:100%;max-width:640px;aspect-ratio:1/1">
+          <div style="position:absolute;left:6%;right:6%;top:30%;bottom:30%;border:1px solid rgba(127,192,234,.35);border-radius:50%"></div>
+          <div style="position:absolute;left:20%;right:20%;top:37%;bottom:37%;border:1px dashed rgba(127,192,234,.3);border-radius:50%"></div>
+          <div style="position:absolute;left:-2%;right:-2%;top:22%;bottom:22%;border:1px solid rgba(127,192,234,.12);border-radius:50%"></div>
+          <div style="position:absolute;left:50%;top:50%;width:30%;aspect-ratio:1/1;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 0 0 14px rgba(63,151,211,.12),0 0 0 30px rgba(63,151,211,.06),0 30px 80px rgba(0,0,0,.5);animation:rhiFloat 6s ease-in-out infinite">
+            <img src="assets/logo.jpeg" alt="" style="width:78%;height:78%;object-fit:contain;border-radius:50%">
+          </div>
+          <div style="position:absolute;left:50%;top:50%;width:44%;aspect-ratio:1/1;margin-left:-22%;margin-top:-22%;animation:rhiSpin 30s linear infinite;z-index:1">
+            <span style="position:absolute;left:50%;top:0;width:6px;height:6px;margin-left:-3px;background:#3F97D3"></span>
+            <span style="position:absolute;left:50%;bottom:0;width:6px;height:6px;margin-left:-3px;background:#7FC0EA"></span>
+          </div>
+          <sc-for list="{{ sats }}" as="s" hint-placeholder-count="8">
+            <span data-sat="" style="position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#7FC0EA;z-index:1"></span>
+          </sc-for>
+          <sc-for list="{{ companies }}" as="c" hint-placeholder-count="4">
+            <div data-orbit="" onClick="{{ goBusinesses }}" style="position:absolute;left:50%;top:50%;cursor:pointer;background:rgba(14,18,27,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(127,192,234,.35);padding:12px 16px;display:flex;gap:12px;align-items:center;white-space:nowrap">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#0E121B;background:#3F97D3;padding:4px 6px">{{ c.num }}</span>
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:15px;font-weight:700;color:#fff">{{ c.name }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9AC9EC">{{ c.sector }}</span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  <div data-hero-fade="" style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));border-top:1px solid rgba(255,255,255,.14)">
+    <div style="padding:20px clamp(20px,4vw,56px);display:flex;gap:10px;align-items:baseline;border-right:1px solid rgba(255,255,255,.1)">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9AA3B5">Now trading</span>
+      <span style="overflow:hidden;display:inline-block;height:1.3em"><span data-rotator="" style="display:inline-block;font-weight:700;font-size:16px;color:#7FC0EA">Clinker</span></span>
+    </div>
+    <div style="padding:20px clamp(20px,4vw,56px);display:flex;gap:10px;align-items:baseline;border-right:1px solid rgba(255,255,255,.1)">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9AA3B5">Malta</span>
+      <span data-clock="" style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#fff">--:--:--</span>
+    </div>
+    <div onClick="{{ goAbout }}" style="cursor:pointer;padding:20px clamp(20px,4vw,56px);display:flex;gap:14px;align-items:center;justify-content:space-between">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9AA3B5">Scroll to explore</span>
+      <span style="width:2px;height:28px;background:rgba(255,255,255,.15);position:relative;overflow:hidden;display:block"><span style="position:absolute;inset:0;background:#7FC0EA;animation:rhiCue 1.8s ease-in-out infinite"></span></span>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Marquee" style="background:#0E121B;padding:8px 0 0;overflow:hidden">
+  <div style="overflow:hidden;padding:18px 0;border-top:1px solid #232A38">
+    <div data-mq="1" style="display:inline-flex;white-space:nowrap;font-size:clamp(48px,8vw,140px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.02em;line-height:1;will-change:transform">
+      <span style="display:inline-flex;align-items:center;gap:.4em;padding-right:.4em"><span style="color:transparent;-webkit-text-stroke:1.5px #7FC0EA">Clinker</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span><span>GBFS</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span><span style="color:transparent;-webkit-text-stroke:1.5px #7FC0EA">Iron Ore</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span><span>Coal</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span></span>
+      <span style="display:inline-flex;align-items:center;gap:.4em;padding-right:.4em"><span style="color:transparent;-webkit-text-stroke:1.5px #7FC0EA">Clinker</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span><span>GBFS</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span><span style="color:transparent;-webkit-text-stroke:1.5px #7FC0EA">Iron Ore</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span><span>Coal</span><span style="width:.25em;height:.25em;background:#3F97D3;transform:rotate(45deg);display:inline-block"></span></span>
+    </div>
+  </div>
+  <div style="overflow:hidden;padding:16px 0;background:#3F97D3;color:#0E121B">
+    <div data-mq="-1" style="display:inline-flex;white-space:nowrap;font-size:clamp(20px,2.2vw,32px);font-weight:700;letter-spacing:-.01em;will-change:transform">
+      <span style="display:inline-flex;gap:36px;padding-right:36px"><span>Trading</span><span>✕</span><span>Shipping</span><span>✕</span><span>Real Estate</span><span>✕</span><span>Capital</span><span>✕</span><span>Wellness</span><span>✕</span><span>Far East</span><span>✕</span><span>Middle East</span><span>✕</span><span>Africa</span><span>✕</span><span>Malta</span><span>✕</span></span>
+      <span style="display:inline-flex;gap:36px;padding-right:36px"><span>Trading</span><span>✕</span><span>Shipping</span><span>✕</span><span>Real Estate</span><span>✕</span><span>Capital</span><span>✕</span><span>Wellness</span><span>✕</span><span>Far East</span><span>✕</span><span>Middle East</span><span>✕</span><span>Africa</span><span>✕</span><span>Malta</span><span>✕</span></span>
+    </div>
+  </div>
+</section>
+
+<section id="about" data-screen-label="About" style="background:#F5F4F0;color:#0E121B;padding:clamp(88px,12vw,170px) clamp(20px,4vw,56px) clamp(72px,9vw,120px);display:flex;flex-direction:column;gap:clamp(64px,9vw,120px)">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:24px 48px">
+    <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#2A78B3">(01) — Who we are</span>
+    <p data-scrub="" style="grid-column:span 3;min-width:min(100%,560px);margin:0;font-size:clamp(28px,3.6vw,58px);line-height:1.1;font-weight:700;letter-spacing:-.03em;text-wrap:pretty">Rasheed Holdings is a family holding company built on cement trading — now spanning shipping, property, capital and wellness across the Far East, the Middle East, Africa and Europe.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap">
+      <h2 data-reveal="" style="margin:0;font-size:clamp(34px,4.4vw,72px);line-height:.92;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.025em">Our journey</h2>
+      <p data-reveal="1" style="margin:0;font-size:17px;line-height:1.6;color:#4A5060;max-width:460px">Our journey is marked by a commitment to create shareholder value while contributing positively to the communities we serve.</p>
+    </div>
+    <div style="height:2px;background:#D9D7D0;position:relative"><div data-draw="" style="position:absolute;inset:0;background:#0E121B;transform-origin:left;transform:scaleX(0)"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:40px 32px">
+      <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" style="display:flex;flex-direction:column;gap:14px">
+          <span style="font-size:clamp(52px,5.4vw,88px);font-weight:800;font-stretch:125%;letter-spacing:-.04em;line-height:.9;color:{{ t.color }}">{{ t.year }}</span>
+          <span style="font-size:19px;font-weight:700">{{ t.title }}</span>
+          <span style="font-size:15px;line-height:1.6;color:#4A5060;text-wrap:pretty">{{ t.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="businesses" data-hscroll="" data-screen-label="Businesses" style="position:relative;background:#0E121B;height:{{ hsH }}">
+  <div style="position:{{ hsPos }};top:0;height:{{ hsInnerH }};overflow:hidden;display:flex;flex-direction:column;padding:clamp(100px,13vh,128px) 0 clamp(24px,4vh,44px)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding:0 clamp(20px,4vw,56px) clamp(20px,3vh,32px)">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#7FC0EA">(02) — Our businesses</span>
+        <h2 data-reveal="1" style="margin:0;font-size:clamp(34px,4.4vw,72px);line-height:.92;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.025em">Four ventures.<br>One foundation.</h2>
+      </div>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:16px;min-width:260px">
+          <span data-hcount="" style="font-size:44px;font-weight:800;font-stretch:125%;letter-spacing:-.03em;line-height:1">01</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9AA3B5">/ 04</span>
+          <div style="flex:1;height:2px;background:#232A38;position:relative;min-width:120px"><div data-hbar="" style="position:absolute;inset:0;background:#3F97D3;transform-origin:left;transform:scaleX(0)"></div></div>
+        </div>
+      </sc-if>
+    </div>
+    <div style="flex:1;min-height:0;position:relative">
+      <div data-htrack="" style="display:flex;flex-direction:{{ hsDir }};gap:24px;padding:0 clamp(20px,4vw,56px);height:100%;will-change:transform">
+        <sc-for list="{{ companies }}" as="c" hint-placeholder-count="4">
+          <article data-cursor="{{ c.cursor }}" style="flex:0 0 {{ panelW }};height:{{ panelH }};min-height:460px;background:#161C29;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));overflow:hidden;border:1px solid #232A38">
+            <div style="position:relative;overflow:hidden;min-height:280px;background:#0B0F17">
+              <div data-pmedia="" style="position:absolute;inset:-6%">
+                <sc-if value="{{ c.isVideo }}" hint-placeholder-val="{{ false }}">
+                  <img src="https://static.wixstatic.com/media/nsplsh_2d4a64325856584c513055~mv2_d_5423_3615_s_4_2.jpg/v1/fill/w_1200,h_900,al_c,q_80/p.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6">
+                  <video data-auto="" src="{{ c.video }}" data-alt="{{ c.videoAlt }}" autoplay="" loop="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+                </sc-if>
+                <sc-if value="{{ c.isWindows }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;inset:12% 14%;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(6,1fr);gap:8px;padding:16px;border:1px solid #2A3346;background:#10151F">
+                    <sc-for list="{{ windows }}" as="wi" hint-placeholder-count="48">
+                      <span data-win="" style="background:{{ wi.bg }};transition:background .6s"></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.isChart }}" hint-placeholder-val="{{ false }}">
+                  <svg viewBox="0 0 600 340" preserveAspectRatio="none" style="position:absolute;inset:14% 10%;width:80%;height:72%;overflow:visible">
+                    <line x1="0" y1="60" x2="600" y2="60" stroke="#232A38"></line>
+                    <line x1="0" y1="140" x2="600" y2="140" stroke="#232A38"></line>
+                    <line x1="0" y1="220" x2="600" y2="220" stroke="#232A38"></line>
+                    <line x1="0" y1="300" x2="600" y2="300" stroke="#232A38"></line>
+                    <path d="M0 290 L60 270 L120 280 L180 236 L240 248 L300 200 L360 214 L420 160 L480 172 L540 118 L600 80 L600 340 L0 340 Z" fill="rgba(63,151,211,.14)"></path>
+                    <path data-chart="" d="M0 290 L60 270 L120 280 L180 236 L240 248 L300 200 L360 214 L420 160 L480 172 L540 118 L600 80" fill="none" stroke="#7FC0EA" style="stroke-width:3;vector-effect:non-scaling-stroke"></path>
+                  </svg>
+                  <div style="position:absolute;right:10%;top:14%;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#CFE6F6;border:1px solid #2A3346;padding:6px 9px">Julius Baer</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#CFE6F6;border:1px solid #2A3346;padding:6px 9px">UBS</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#CFE6F6;border:1px solid #2A3346;padding:6px 9px">Bank of Valletta</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.isBreath }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;inset:0;background:#121A28">
+                    <span style="position:absolute;left:50%;top:50%;width:min(90%,90vh);aspect-ratio:1/1;border:1px solid #3F97D3;border-radius:50%;animation:rhiBreathe 6s ease-in-out infinite"></span>
+                    <span style="position:absolute;left:50%;top:50%;width:min(72%,72vh);aspect-ratio:1/1;border:1px solid #3F97D3;border-radius:50%;animation:rhiBreathe 6s ease-in-out .35s infinite"></span>
+                    <span style="position:absolute;left:50%;top:50%;width:min(54%,54vh);aspect-ratio:1/1;border:1px solid #7FC0EA;border-radius:50%;animation:rhiBreathe 6s ease-in-out .7s infinite"></span>
+                    <span style="position:absolute;left:50%;top:50%;width:min(36%,36vh);aspect-ratio:1/1;background:rgba(63,151,211,.25);border-radius:50%;animation:rhiBreathe 6s ease-in-out 1.05s infinite"></span>
+                    <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#CFE6F6;white-space:nowrap">Breathe · Move · Form</span>
+                  </div>
+                </sc-if>
+              </div>
+              <span style="position:absolute;left:16px;top:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#CFE6F6;background:rgba(14,18,27,.7);padding:5px 8px">{{ c.mediaNote }}</span>
+              <span style="position:absolute;left:16px;bottom:4px;font-size:clamp(80px,9vw,150px);font-weight:800;font-stretch:125%;letter-spacing:-.05em;line-height:.8;color:transparent;-webkit-text-stroke:1.5px #7FC0EA">{{ c.num }}</span>
+            </div>
+            <div style="padding:clamp(24px,2.6vw,40px);display:flex;flex-direction:column;gap:16px;justify-content:center">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7FC0EA">{{ c.sector }}</span>
+              <h3 style="margin:0;font-size:clamp(26px,2.4vw,40px);line-height:.95;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.02em">{{ c.name }}</h3>
+              <p style="margin:0;font-size:15px;line-height:1.6;color:#C3C9D4;text-wrap:pretty">{{ c.body }}</p>
+              <sc-if value="{{ c.hasStats }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:16px;border-top:1px solid #2A3346;padding-top:16px">
+                  <sc-for list="{{ c.stats }}" as="s" hint-placeholder-count="2">
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:clamp(24px,2vw,32px);font-weight:800;font-stretch:125%;letter-spacing:-.03em">{{ s.v }}</span>
+                      <span style="font-size:12px;color:#9AA3B5">{{ s.l }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.hasLink }}" hint-placeholder-val="{{ false }}">
+                <a href="{{ c.link }}" target="_blank" data-magnet="" style="align-self:flex-start;border:1px solid #7FC0EA;color:#fff;font-weight:600;font-size:14px;padding:12px 18px;display:flex;gap:10px">{{ c.linkLabel }} <span style="color:#7FC0EA">↗</span></a>
+              </sc-if>
+            </div>
+          </article>
+        </sc-for>
+        <div style="flex:0 0 1px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reach" data-screen-label="Reach" style="background:#F5F4F0;color:#0E121B;padding:clamp(88px,11vw,150px) clamp(20px,4vw,56px);display:flex;flex-direction:column;gap:48px">
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#2A78B3">(03) — Global reach</span>
+      <h2 data-reveal="1" style="margin:0;font-size:clamp(34px,4.4vw,72px);line-height:.92;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.025em">Always<br>in motion.</h2>
+    </div>
+    <p data-reveal="2" style="margin:0;font-size:17px;line-height:1.6;color:#4A5060;max-width:440px">With a presence across the Far East, Middle East and Africa, Cem Asia has handled over 1,500 shipments since its inception in 2012.</p>
+  </div>
+  <div data-reveal="" style="position:relative;background:#ECEAE4;border:1px solid #DDDAD3">
+    <iframe src="Trade Map.html" title="Trade lanes map" loading="lazy" style="display:block;width:100%;aspect-ratio:2/1;min-height:320px;border:0;background:#ECEAE4"></iframe>
+    
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));border-top:1px solid #0E121B">
+    <sc-for list="{{ figures }}" as="f" hint-placeholder-count="4">
+      <div data-reveal="{{ $index }}" style="display:flex;flex-direction:column;gap:10px;padding:28px 24px 8px 0">
+        <span data-count="" style="font-size:clamp(52px,5.6vw,96px);font-weight:800;font-stretch:125%;letter-spacing:-.045em;line-height:.9">{{ f.value }}</span>
+        <span style="font-size:16px;font-weight:700">{{ f.label }}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5A6070">{{ f.source }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section data-reel-sec="" data-screen-label="Reel" style="position:relative;height:{{ reelH }};background:#000">
+  <div style="position:{{ hsPos }};top:0;height:100vh;min-height:520px;overflow:hidden;display:flex;align-items:center;justify-content:center">
+    <div data-reel="" style="position:absolute;inset:0;overflow:hidden">
+      <img src="https://static.wixstatic.com/media/nsplsh_2d4a64325856584c513055~mv2_d_5423_3615_s_4_2.jpg/v1/fill/w_1920,h_1280,al_c,q_85/hero.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+      <video data-auto="" data-reel-video="" src="{{ reelVideo }}" data-alt="{{ reelAlt }}" autoplay="" loop="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <div style="position:absolute;inset:0;background:rgba(5,8,14,.5)"></div>
+    </div>
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:0 24px">
+      <span data-reel-line="0" style="font-size:clamp(40px,7vw,128px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.03em;line-height:.92">40 million tonnes.</span>
+      <span data-reel-line="1" style="font-size:clamp(40px,7vw,128px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.03em;line-height:.92;color:transparent;-webkit-text-stroke:2px #fff">1,500+ shipments.</span>
+      <span data-reel-line="2" style="font-size:clamp(40px,7vw,128px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.03em;line-height:.92;color:#7FC0EA">One family.</span>
+    </div>
+  </div>
+</section>
+
+<section id="values" data-screen-label="Values" style="background:#F5F4F0;color:#0E121B;padding:clamp(88px,11vw,150px) clamp(20px,4vw,56px);display:flex;flex-direction:column;gap:48px">
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#2A78B3">(04) — Our values</span>
+      <h2 data-reveal="1" style="margin:0;font-size:clamp(34px,4.4vw,72px);line-height:.92;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.025em">Built for<br>the long term.</h2>
+    </div>
+    <p data-reveal="2" style="margin:0;font-size:17px;line-height:1.6;color:#4A5060;max-width:420px">Four principles guide every decision across our trading, property and investment activities.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:20px">
+    <sc-for list="{{ values }}" as="v" hint-placeholder-count="4">
+      <div data-reveal="{{ $index }}">
+        <div data-tilt="" style="position:relative;overflow:hidden;background:#fff;border:1px solid #E2E0DA;padding:28px;min-height:420px;height:100%;display:flex;flex-direction:column;justify-content:space-between;gap:32px;transition:transform .25s ease-out,box-shadow .3s;will-change:transform" style-hover="box-shadow:0 40px 60px -30px rgba(14,18,27,.35)">
+          <div data-glare="" style="position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-size:clamp(64px,6vw,96px);font-weight:800;font-stretch:125%;letter-spacing:-.05em;line-height:.8;color:#3F97D3">{{ v.num }}</span>
+            <span style="width:14px;height:14px;background:#0E121B;display:block;animation:rhiSpin 8s linear infinite"></span>
+          </div>
+          <div style="position:relative;display:flex;flex-direction:column;gap:12px">
+            <h3 style="margin:0;font-size:clamp(20px,1.6vw,26px);font-weight:800;font-stretch:112%;text-transform:uppercase;letter-spacing:-.02em;overflow-wrap:anywhere">{{ v.title }}</h3>
+            <span style="font-size:17px;font-weight:700">{{ v.lead }}</span>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#4A5060;text-wrap:pretty">{{ v.body }}</p>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="family" data-screen-label="Family" onMouseLeave="{{ dirLeave }}" style="background:#0E121B;padding:clamp(88px,11vw,150px) clamp(20px,4vw,56px);display:flex;flex-direction:column;gap:48px">
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#7FC0EA">(05) — The family</span>
+      <h2 data-reveal="1" style="margin:0;font-size:clamp(34px,4.4vw,72px);line-height:.92;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.025em">Our directors</h2>
+    </div>
+    <p data-reveal="2" style="margin:0;font-size:17px;line-height:1.6;color:#C3C9D4;max-width:440px">As a family-owned company, we prioritize trust, collaboration, and shared values in everything we do.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;border-bottom:1px solid #232A38">
+    <sc-for list="{{ directors }}" as="d" hint-placeholder-count="4">
+      <div data-reveal="{{ $index }}" onMouseEnter="{{ d.enter }}" style="position:relative;overflow:hidden;border-top:1px solid #232A38">
+        <div style="position:absolute;inset:0;background:#3F97D3;transform-origin:left;transform:scaleX({{ d.fill }});transition:transform .55s cubic-bezier(.7,0,.2,1)"></div>
+        <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 32px;align-items:center;padding:clamp(22px,2.6vw,34px) clamp(8px,1.4vw,20px)">
+          <h3 style="grid-column:span 2;margin:0;font-size:clamp(32px,4.6vw,76px);line-height:.9;font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.03em;color:{{ d.nameColor }};transition:color .3s">{{ d.name }}</h3>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:{{ d.monoColor }}">{{ d.exp }}</span>
+            <span style="font-size:15px;line-height:1.5;color:{{ d.subColor }}">{{ d.role }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600">
+            <a href="mailto:{{ d.email }}" style="color:{{ d.linkColor }}">{{ d.email }}</a>
+            <a href="{{ d.linkedin }}" target="_blank" style="color:{{ d.linkColor }}">LinkedIn ↗</a>
+          </div>
+        </div>
+        <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+          <p style="position:relative;margin:0;padding:0 8px 24px;font-size:15px;line-height:1.55;color:#C3C9D4">“{{ d.quote }}”</p>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <p data-scrub="" style="margin:0;font-size:clamp(24px,2.8vw,44px);line-height:1.18;font-weight:600;letter-spacing:-.025em;max-width:1100px;text-wrap:pretty">Our diverse backgrounds and experiences are our greatest strengths. What unites us is a shared commitment to growth, success, and creating a positive impact through everything we do.</p>
+</section>
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+  <div data-follow="" style="position:fixed;left:0;top:0;width:340px;z-index:40;pointer-events:none;background:#3F97D3;color:#0E121B;padding:22px;display:flex;flex-direction:column;gap:12px;opacity:{{ followOp }};transition:opacity .3s;box-shadow:0 30px 60px rgba(0,0,0,.4)">
+    <span style="font-size:44px;font-weight:800;line-height:.6;height:20px">“</span>
+    <span style="font-size:16px;line-height:1.5;font-weight:600">{{ dirQuote }}</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase">— {{ dirName }}</span>
+  </div>
+</sc-if>
+
+<section id="contact" data-screen-label="Contact" style="background:#3F97D3;color:#0E121B;padding:clamp(88px,11vw,150px) clamp(20px,4vw,56px);display:flex;flex-direction:column;gap:48px">
+  <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase">(06) — Contact us · hover the letters</span>
+  <div onClick="{{ goContactForm }}" style="display:flex;flex-wrap:wrap;column-gap:.28em;font-size:clamp(52px,11.5vw,220px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.04em;line-height:.85;cursor:default">
+    <span style="display:inline-flex;white-space:nowrap"><span onMouseEnter="{{ bounce }}" style="display:inline-block">L</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">e</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">t</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">’</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">s</span></span><span style="display:inline-flex;white-space:nowrap"><span onMouseEnter="{{ bounce }}" style="display:inline-block">t</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">a</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">l</span><span onMouseEnter="{{ bounce }}" style="display:inline-block">k</span><span onMouseEnter="{{ bounce }}" style="display:inline-block;color:#fff">.</span></span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:48px 72px;align-items:start">
+    <div data-reveal="" style="display:flex;flex-direction:column;gap:28px">
+      <p style="margin:0;font-size:clamp(18px,1.5vw,21px);line-height:1.55;max-width:520px;font-weight:500">For partnerships, investment enquiries or questions about any of our businesses, reach out and our team will respond promptly.</p>
+      <div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #0E121B;padding-top:18px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase">General enquiries</span>
+        <a href="mailto:fatima@rh-intl.com" style="font-size:clamp(24px,2.4vw,36px);font-weight:800;letter-spacing:-.02em;color:#0E121B">fatima@rh-intl.com</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(14,18,27,.3);padding-top:18px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase">Registered office</span>
+        <span style="font-size:17px;line-height:1.55;font-weight:500">Rasheed Holdings International Ltd.<br>12, Sqaq San Gwann Nru. 2, Siggiewi, SGW 1471, Malta</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(14,18,27,.3);padding-top:18px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase">Local time in Malta</span>
+        <span data-clock="" style="font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:500">--:--:--</span>
+      </div>
+    </div>
+    <div id="contact-form" data-reveal="1" style="background:#0E121B;color:#fff;padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:26px">
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:26px">
+          <h3 style="margin:0;font-size:clamp(24px,2.2vw,32px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.02em">Send an enquiry</h3>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B5">Regarding</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+                <div onClick="{{ t.pick }}" style="cursor:pointer;padding:9px 14px;font-size:14px;font-weight:600;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};transition:background .2s">{{ t.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+            <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B5">Full name</span><input value="{{ f.name }}" onChange="{{ setName }}" placeholder="Your name" style="border:none;border-bottom:1px solid #3A4356;padding:10px 0;font-size:17px;background:transparent;outline:none;color:#fff;font-family:inherit" style-focus="border-bottom-color:#7FC0EA"></label>
+            <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B5">Email</span><input value="{{ f.email }}" onChange="{{ setEmail }}" placeholder="you@company.com" style="border:none;border-bottom:1px solid #3A4356;padding:10px 0;font-size:17px;background:transparent;outline:none;color:#fff;font-family:inherit" style-focus="border-bottom-color:#7FC0EA"></label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B5">Company (optional)</span><input value="{{ f.company }}" onChange="{{ setCompany }}" placeholder="Organisation" style="border:none;border-bottom:1px solid #3A4356;padding:10px 0;font-size:17px;background:transparent;outline:none;color:#fff;font-family:inherit" style-focus="border-bottom-color:#7FC0EA"></label>
+          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B5">Message</span><textarea value="{{ f.message }}" onChange="{{ setMessage }}" rows="4" placeholder="How can we help?" style="border:1px solid #3A4356;padding:12px;font-size:16px;background:transparent;outline:none;resize:vertical;color:#fff;font-family:inherit" style-focus="border-color:#7FC0EA"></textarea></label>
+          <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:#F2A38F">Please add your name, a valid email and a message.</span></sc-if>
+          <div onClick="{{ submit }}" data-magnet="" style="cursor:pointer;align-self:flex-start;background:#fff;color:#0E121B;padding:17px 30px;font-weight:700;font-size:15px;white-space:nowrap" style-hover="background:#7FC0EA">Send message →</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:18px;padding:24px 0">
+          <span style="width:52px;height:52px;background:#3F97D3;color:#0E121B;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800">✓</span>
+          <h3 style="margin:0;font-size:clamp(24px,2.2vw,32px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.02em">Thank you, {{ f.name }}.</h3>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#C3C9D4">Your message has been received. A member of our team will be in touch at {{ f.email }}.</p>
+          <div onClick="{{ reset }}" style="cursor:pointer;align-self:flex-start;font-weight:600;font-size:15px;border-bottom:2px solid #3F97D3;padding-bottom:4px">Send another message</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#0E121B;color:#C3C9D4;padding:clamp(64px,8vw,104px) clamp(20px,4vw,56px) 28px;display:flex;flex-direction:column;gap:56px;overflow:hidden">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Office</span>
+      <span style="font-size:15px;line-height:1.6">Rasheed Holdings International Ltd.<br>12, Sqaq San Gwann Nru. 2,<br>Siggiewi, SGW 1471, Malta</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Reach out</span>
+      <a href="mailto:fatima@rh-intl.com" style="font-size:20px;font-weight:700;color:#fff">fatima@rh-intl.com</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Explore</span>
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+        <span onClick="{{ n.go }}" style="cursor:pointer;font-size:15px;color:#C3C9D4" style-hover="color:#fff">{{ n.label }}</span>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Back to top</span>
+      <div onClick="{{ goTop }}" data-magnet="" style="cursor:pointer;width:72px;height:72px;border-radius:50%;border:1px solid #7FC0EA;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff" style-hover="background:#3F97D3;color:#0E121B">↑</div>
+    </div>
+  </div>
+  <div style="display:flex;font-size:clamp(40px,14.5vw,280px);font-weight:800;font-stretch:125%;text-transform:uppercase;letter-spacing:-.05em;line-height:.8;color:#fff;white-space:nowrap;max-width:100%">
+    <span data-reveal="0" style="display:inline-block">R</span><span data-reveal="1" style="display:inline-block">a</span><span data-reveal="2" style="display:inline-block">s</span><span data-reveal="3" style="display:inline-block">h</span><span data-reveal="4" style="display:inline-block">e</span><span data-reveal="5" style="display:inline-block">e</span><span data-reveal="6" style="display:inline-block">d</span><span data-reveal="6" style="display:inline-block;color:#3F97D3">.</span>
+  </div>
+  <div style="border-top:1px solid #232A38;padding-top:20px;font-size:13px;color:#8A91A0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap"><span>© 2026 Rasheed Holdings International Ltd.</span><span>Cementing legacies with continued excellence</span></div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroVideoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Video&quot;},&quot;reelVideoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Video&quot;},&quot;showLoader&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;customCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  state = { w: typeof window !== 'undefined' ? window.innerWidth : 1400, menu: false, hovDir: -1, form: { name: '', email: '', company: '', message: '', topic: 'Partnerships' }, sent: false, err: false };
+  loaderRef = React.createRef(); loaderNumRef = React.createRef();
+  q(s) { return document.querySelector(s); }
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onR); this.onR();
+    const mm = s => !!(window.matchMedia && matchMedia(s).matches);
+    this.reduced = mm('(prefers-reduced-motion: reduce)'); this.fine = mm('(pointer:fine)');
+    this.mx = innerWidth * .6; this.my = innerHeight * .5; this.rx = this.mx; this.ry = this.my; this.fx = this.mx; this.fy = this.my; this.cs = 1;
+    this.lastY = scrollY; this.vel = 0; this.oang = 0; this.ospeed = 1; this.t0 = performance.now(); this.timers = [];
+    this.onMove = e => this.pointer(e);
+    window.addEventListener('pointermove', this.onMove, { passive: true });
+    this.initVideos(); this.initReveal(); this.initLoader(); this.initTickers(); this.initScrub(); this.initChart();
+    const loop = now => { try { this.frame(now); } catch (e) {} this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop);
+  }
+  componentDidUpdate() { this.initVideos(); }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onR); window.removeEventListener('pointermove', this.onMove);
+    cancelAnimationFrame(this.raf); (this.timers || []).forEach(clearInterval);
+    this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); this.onPrint && window.removeEventListener('beforeprint', this.onPrint);
+  }
+  go(id) {
+    this.setState({ menu: false });
+    const el = document.getElementById(id);
+    const top = id === 'top' || !el ? 0 : el.getBoundingClientRect().top + scrollY - (id === 'contact-form' ? 120 : 0);
+    window.scrollTo({ top, behavior: this.reduced ? 'auto' : 'smooth' });
+  }
+  pointer(e) {
+    this.mx = e.clientX; this.my = e.clientY;
+    const t = e.target && e.target.closest ? e.target : null;
+    if (t !== this.lastT) {
+      this.lastT = t;
+      const lab = t && t.closest('[data-cursor]'); this.curLabel = lab ? lab.getAttribute('data-cursor') : '';
+      this.curBig = !!(t && (t.closest('a,input,textarea,label,[data-magnet]') || getComputedStyle(t).cursor === 'pointer'));
+      if (this.curBig) this.curLabel = '';
+    }
+    if (this.reduced) return;
+    document.querySelectorAll('[data-magnet]').forEach(m => {
+      const r = m.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2), R = Math.max(r.width, r.height) * .5 + 40;
+      if (Math.abs(dx) < R && Math.abs(dy) < R) { m.style.transition = 'transform .2s ease-out'; m.style.transform = 'translate(' + dx * .25 + 'px,' + dy * .32 + 'px)'; m.__on = 1; }
+      else if (m.__on) { m.__on = 0; m.style.transition = 'transform .7s cubic-bezier(.2,1.8,.4,1)'; m.style.transform = ''; }
+    });
+    const tl = t && t.closest('[data-tilt]');
+    if (this.tiltEl && this.tiltEl !== tl) { this.tiltEl.style.transform = ''; const g = this.tiltEl.querySelector('[data-glare]'); if (g) g.style.opacity = 0; }
+    this.tiltEl = tl;
+    if (tl) {
+      const r = tl.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      tl.style.transform = 'perspective(900px) rotateX(' + (.5 - py) * 10 + 'deg) rotateY(' + (px - .5) * 12 + 'deg) translateY(-6px)';
+      const g = tl.querySelector('[data-glare]'); if (g) { g.style.opacity = 1; g.style.background = 'radial-gradient(circle at ' + px * 100 + '% ' + py * 100 + '%, rgba(63,151,211,.3), transparent 55%)'; }
+    }
+  }
+  clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  secProgress(sec) { const r = sec.getBoundingClientRect(); return this.clamp(-r.top / Math.max(1, sec.offsetHeight - innerHeight), 0, 1); }
+  frame(now) {
+    const t = (now - this.t0) / 1000, sy = scrollY, vh = innerHeight, wide = this.state.w >= 900;
+    const dv = sy - this.lastY; this.lastY = sy; this.vel += (dv - this.vel) * .15;
+    const de = document.documentElement, pb = this.q('[data-progress]');
+    if (pb) pb.style.transform = 'scaleX(' + sy / Math.max(1, de.scrollHeight - vh) + ')';
+    const nav = this.q('[data-nav]');
+    if (nav) { const hide = sy > 240 && this.vel > 1.5 && !this.state.menu; if (hide !== this.navHidden && (hide || this.vel < -1 || sy < 240)) { this.navHidden = hide; nav.style.transform = hide ? 'translateY(-120%)' : 'translateY(0)'; } }
+    this.cursor();
+    if (this.reduced) return;
+    this.ocean(t); this.orbit(); this.marquee();
+    const hs = this.q('[data-hscroll]'), tr = this.q('[data-htrack]');
+    if (hs && tr) {
+      if (!wide) tr.style.transform = '';
+      else {
+        const p = this.secProgress(hs), dist = Math.max(0, tr.scrollWidth - tr.parentElement.clientWidth);
+        tr.style.transform = 'translate3d(' + (-p * dist) + 'px,0,0)';
+        const bar = this.q('[data-hbar]'); if (bar) bar.style.transform = 'scaleX(' + p + ')';
+        const n = this.q('[data-hcount]'), idx = Math.min(4, Math.floor(p * 3.999) + 1); if (n && n.__i !== idx) { n.__i = idx; n.textContent = '0' + idx; }
+        tr.querySelectorAll('[data-pmedia]').forEach(m => { const b = m.parentElement.getBoundingClientRect(); m.style.transform = 'translateX(' + ((b.left + b.width / 2 - innerWidth / 2) / innerWidth) * -50 + 'px)'; });
+      }
+    }
+    const rs = this.q('[data-reel-sec]'), rm = this.q('[data-reel]');
+    if (rs && rm) {
+      const lines = document.querySelectorAll('[data-reel-line]');
+      if (!wide) { rm.style.clipPath = 'none'; lines.forEach(l => { l.style.opacity = 1; l.style.transform = ''; }); }
+      else {
+        const p = this.secProgress(rs), e = this.clamp(p / .45, 0, 1), ee = 1 - Math.pow(1 - e, 3), k = 1 - ee;
+        rm.style.clipPath = 'inset(' + k * 24 + '% ' + k * 30 + '% ' + k * 24 + '% ' + k * 30 + '% round ' + k * 28 + 'px)';
+        const v = this.q('[data-reel-video]'); if (v) v.style.transform = 'scale(' + (1.25 - .25 * ee) + ')';
+        lines.forEach((l, i) => { const o = this.clamp((p - (.4 + i * .14)) / .1, 0, 1); l.style.opacity = o; l.style.transform = 'translateY(' + (1 - o) * 50 + 'px)'; });
+      }
+    }
+    this.ships(t);
+    const f = this.q('[data-follow]');
+    if (f) { this.fx += (this.mx - this.fx) * .12; this.fy += (this.my - this.fy) * .12; const rot = this.clamp((this.mx - this.fx) * .06, -8, 8); f.style.transform = 'translate(' + Math.min(this.fx + 28, innerWidth - 360) + 'px,' + this.clamp(this.fy - 60, 20, innerHeight - 220) + 'px) rotate(' + rot + 'deg)'; }
+    (this.scrubs || []).forEach(p => {
+      const r = p.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) return;
+      const prog = this.clamp((vh * .85 - r.top) / (r.height + vh * .35), 0, 1), n = p.__w.length;
+      p.__w.forEach((s, i) => { const o = .14 + .86 * this.clamp(prog * (n + 6) - i, 0, 1); if (Math.abs((s.__o || 0) - o) > .02) { s.__o = o; s.style.opacity = o; } });
+    });
+    document.querySelectorAll('[data-draw]').forEach(d => { const r = d.getBoundingClientRect(); d.style.transform = 'scaleX(' + this.clamp((vh * .9 - r.top) / (vh * .55), 0, 1) + ')'; });
+  }
+  cursor() {
+    const cd = this.q('[data-cur-dot]'), cr = this.q('[data-cur-ring]'), cl = this.q('[data-cur-label]');
+    if (!cd || !cr) return;
+    if (!this.fine) { cd.style.display = cr.style.display = 'none'; if (cl) cl.style.display = 'none'; return; }
+    this.rx += (this.mx - this.rx) * .2; this.ry += (this.my - this.ry) * .2;
+    const lab = this.curLabel, s = lab ? 2.3 : this.curBig ? 1.6 : 1; this.cs += (s - this.cs) * .2;
+    cd.style.transform = 'translate(' + this.mx + 'px,' + this.my + 'px) translate(-50%,-50%) scale(' + (lab || this.curBig ? 0 : 1) + ')';
+    cr.style.transform = 'translate(' + this.rx + 'px,' + this.ry + 'px) translate(-50%,-50%) scale(' + this.cs + ')';
+    cr.style.background = lab ? '#7FC0EA' : this.curBig ? 'rgba(63,151,211,.18)' : 'transparent';
+    if (cl) { cl.style.transform = 'translate(' + this.rx + 'px,' + this.ry + 'px) translate(-50%,-50%)'; cl.style.opacity = lab ? 1 : 0; if (lab && cl.textContent !== lab) cl.textContent = lab; }
+  }
+  ocean(t) {
+    const c = this.q('[data-ocean]'); if (!c) return;
+    const r = c.getBoundingClientRect(); if (r.bottom < 0) return;
+    const dpr = Math.min(2, devicePixelRatio || 1), W = r.width, H = r.height;
+    if (c.width !== Math.round(W * dpr) || c.height !== Math.round(H * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const mx = this.mx - r.left, my = this.my - r.top, N = 24;
+    for (let i = 0; i < N; i++) {
+      const base = H * .3 + i * (H * .78 / N); ctx.beginPath();
+      for (let x = -10; x <= W + 14; x += 14) {
+        let y = base + Math.sin(x * .0035 + t * .5 + i * .45) * 22 + Math.sin(x * .009 - t * .8 + i * .9) * 9;
+        const dx = x - mx, dy = y - my; y -= 70 * Math.exp(-(dx * dx + dy * dy) / 16000);
+        x === -10 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(127,192,234,' + (.05 + .24 * (i / N)) + ')'; ctx.lineWidth = 1; ctx.stroke();
+    }
+  }
+  orbit() {
+    const box = this.q('[data-orbit-box]'); if (!box) return;
+    const r = box.getBoundingClientRect(); if (r.bottom < 0) return;
+    const W = box.clientWidth, H = box.clientHeight;
+    this.ospeed += ((this.orbitHover ? .2 : 1) - this.ospeed) * .05; this.oang += .004 * this.ospeed;
+    box.querySelectorAll('[data-orbit]').forEach((el, i) => {
+      const a = this.oang + i * Math.PI / 2, x = Math.cos(a) * W * .44, y = Math.sin(a) * H * .2, d = (Math.sin(a) + 1) / 2;
+      el.style.transform = 'translate(-50%,-50%) translate(' + x + 'px,' + y + 'px) scale(' + (.74 + .3 * d) + ')';
+      el.style.zIndex = d > .5 ? 4 : 1; el.style.opacity = .4 + .6 * d;
+    });
+    box.querySelectorAll('[data-sat]').forEach((el, i) => {
+      const a = -this.oang * 1.8 + i * Math.PI / 4, x = Math.cos(a) * W * .3, y = Math.sin(a) * H * .13;
+      el.style.transform = 'translate(' + x + 'px,' + y + 'px)'; el.style.opacity = Math.sin(a) > 0 ? 1 : .3;
+    });
+  }
+  marquee() {
+    const boost = Math.min(Math.abs(this.vel), 40) * .3, sk = this.clamp(this.vel * .35, -10, 10);
+    document.querySelectorAll('[data-mq]').forEach(el => {
+      const dir = +el.getAttribute('data-mq'); el.__x = (el.__x || 0) - dir * (.7 + boost);
+      const half = el.scrollWidth / 2; if (half > 0) { if (el.__x <= -half) el.__x += half; if (el.__x > 0) el.__x -= half; }
+      el.style.transform = 'translate3d(' + el.__x + 'px,0,0) skewX(' + (-sk * dir) + 'deg)';
+    });
+  }
+  ships(t) {
+    const svg = this.q('[data-routes]'); if (!svg) return;
+    const r = svg.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+    const paths = svg.querySelectorAll('[data-route]'), ships = svg.querySelectorAll('[data-ship]');
+    paths.forEach((p, i) => {
+      if (!p.__L) p.__L = p.getTotalLength();
+      p.style.strokeDashoffset = -(t * 18) % 10;
+      const s = ships[i]; if (!s) return;
+      const raw = t * .09 + i * .23, u = raw % 1, back = Math.floor(raw) % 2 === 1, e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      const pt = p.getPointAtLength(p.__L * (back ? 1 - e : e)); s.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')');
+    });
+  }
+  initLoader() {
+    const L = this.loaderRef.current, N = this.loaderNumRef.current;
+    if (!L) { this.intro(0); return; }
+    if (!L.animate) { L.style.display = 'none'; return; }
+    const t0 = performance.now(), D = 1400; let done = false;
+    const finish = () => {
+      if (done) return; done = true; this.intro(200);
+      const a = L.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-100%)' }], { duration: 900, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' });
+      a.onfinish = () => { L.style.display = 'none'; }; setTimeout(() => { L.style.display = 'none'; }, 1300);
+    };
+    const step = now => { const p = Math.min(1, (now - t0) / D); if (N) N.textContent = String(Math.round(100 * (1 - Math.pow(1 - p, 2.2)))); if (p < 1) requestAnimationFrame(step); else setTimeout(finish, 120); };
+    requestAnimationFrame(step); setTimeout(finish, 3200);
+  }
+  intro(d) {
+    if (this.reduced || !Element.prototype.animate) return;
+    document.querySelectorAll('[data-word]').forEach((w, i) => w.animate([{ transform: 'translateY(115%) rotate(4deg)' }, { transform: 'translateY(0) rotate(0)' }], { duration: 1200, delay: d + i * 110, easing: 'cubic-bezier(.16,.84,.24,1)', fill: 'backwards' }));
+    document.querySelectorAll('[data-hero-fade]').forEach((w, i) => w.animate([{ opacity: 0, transform: 'translateY(28px)' }, { opacity: 1, transform: 'none' }], { duration: 1000, delay: d + 450 + i * 110, easing: 'cubic-bezier(.16,.84,.24,1)', fill: 'backwards' }));
+  }
+  initTickers() {
+    const clock = () => { let s; try { s = new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Malta', hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch (e) { s = new Date().toLocaleTimeString(); } document.querySelectorAll('[data-clock]').forEach(c => { c.textContent = s; }); };
+    clock(); this.timers.push(setInterval(clock, 1000));
+    const words = ['Clinker', 'GBFS', 'Iron Ore', 'Coal', 'Property', 'Capital']; let wi = 0;
+    this.timers.push(setInterval(() => {
+      const el = this.q('[data-rotator]'); if (!el) return; wi = (wi + 1) % words.length;
+      if (!el.animate || this.reduced) { el.textContent = words[wi]; return; }
+      el.animate([{ transform: 'translateY(0)', opacity: 1 }, { transform: 'translateY(-100%)', opacity: 0 }], { duration: 260, easing: 'ease-in', fill: 'forwards' }).onfinish = function () { el.textContent = words[wi]; el.getAnimations().forEach(a => a.cancel()); el.animate([{ transform: 'translateY(100%)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.16,.84,.24,1)' }); };
+    }, 2200));
+    this.timers.push(setInterval(() => {
+      if (this.reduced) return; const ws = document.querySelectorAll('[data-win]'); if (!ws.length) return;
+      for (let k = 0; k < 3; k++) { const el = ws[Math.floor(Math.random() * ws.length)]; el.__on = !el.__on; el.style.background = el.__on ? (Math.random() < .3 ? '#FFFFFF' : '#7FC0EA') : '#1B2232'; }
+    }, 240));
+  }
+  initScrub() {
+    const hl = new Set(['shipping,', 'property,', 'capital', 'wellness', 'growth,', 'success,', 'positive', 'impact']);
+    this.scrubs = [];
+    document.querySelectorAll('[data-scrub]').forEach(p => {
+      if (!p.__w) {
+        const words = p.textContent.trim().split(/\s+/);
+        p.textContent = '';
+        p.__w = words.map(w => { const s = document.createElement('span'); s.textContent = w + ' '; if (hl.has(w.toLowerCase())) s.style.color = '#3F97D3'; s.style.transition = 'opacity .25s'; if (!this.reduced) s.style.opacity = .14; p.appendChild(s); return s; });
+      }
+      if (!this.reduced) this.scrubs.push(p);
+    });
+  }
+  initChart() {
+    if (this.reduced) return;
+    document.querySelectorAll('[data-chart]').forEach(p => { if (!p.getTotalLength || !p.animate) return; const L = p.getTotalLength(); p.style.strokeDasharray = L; p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0, offset: .55 }, { strokeDashoffset: 0 }], { duration: 5200, iterations: Infinity, easing: 'cubic-bezier(.6,0,.2,1)' }); });
+  }
+  initVideos() {
+    document.querySelectorAll('video[data-auto]').forEach(v => {
+      const src = v.getAttribute('src'); if (!src || v.__src === src) return;
+      v.__src = src; v.__alt = 0; v.style.opacity = '';
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('muted', '');
+      const play = () => { const p = v.play(); p && p.catch(() => {}); };
+      const fail = () => { const alt = v.getAttribute('data-alt'); if (alt && !v.__alt) { v.__alt = 1; v.src = alt; v.__src = v.getAttribute('src'); play(); } else v.style.opacity = '0'; };
+      if (!v.__bound) { v.__bound = 1; v.addEventListener('error', () => fail()); }
+      if (v.error || v.networkState === 3) fail(); else play();
+    });
+  }
+  initReveal() {
+    if (typeof IntersectionObserver === 'undefined' || !Element.prototype.animate || this.reduced) return;
+    this.rvs = [];
+    this.io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; const el = e.target; this.io.unobserve(el);
+      if (el.__rv) el.__rv.play(); el.querySelectorAll('[data-count]').forEach(c => this.countUp(c, el.__delay || 0));
+    }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+    const scan = () => document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
+      el.setAttribute('data-rv', '1');
+      const i = Math.min(parseInt(el.getAttribute('data-reveal')) || 0, 7); el.__delay = i * 100;
+      const a = el.animate([{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 1000, delay: el.__delay, easing: 'cubic-bezier(.16,.84,.24,1)', fill: 'both' });
+      a.onfinish = () => a.cancel(); el.__rv = a; this.rvs.push(el);
+      const r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0 && r.left < innerWidth && r.right > 0) el.querySelectorAll('[data-count]').forEach(c => this.countUp(c, el.__delay));
+      else { a.pause(); this.io.observe(el); }
+    });
+    scan();
+    this.mo = new MutationObserver(() => { clearTimeout(this.mt); this.mt = setTimeout(scan, 30); });
+    this.mo.observe(document.body, { childList: true, subtree: true });
+    const finishAll = above => this.rvs.forEach(el => { const a = el.__rv; if (a && a.playState === 'paused') { const r = el.getBoundingClientRect(); if (!above || (r.top < innerHeight && r.left < innerWidth && r.right > 0)) { try { a.finish(); } catch (e) {} } } });
+    this.timers.push(setInterval(() => finishAll(true), 2500));
+    this.onPrint = () => finishAll(false); window.addEventListener('beforeprint', this.onPrint);
+  }
+  countUp(el, delay) {
+    const node = el.firstChild; if (!node || node.nodeType !== 3 || el.__counted) return; el.__counted = 1;
+    const orig = node.nodeValue, m = orig.match(/[\d,.]+/); if (!m) return;
+    const target = parseFloat(m[0].replace(/,/g, '')), comma = m[0].includes(',');
+    node.nodeValue = orig.replace(m[0], '0');
+    setTimeout(() => {
+      const t0 = performance.now(), D = 1800;
+      const step = now => { const p = Math.min(1, (now - t0) / D), v = Math.round(target * (1 - Math.pow(1 - p, 3))); node.nodeValue = p < 1 ? orig.replace(m[0], comma ? v.toLocaleString('en-US') : String(v)) : orig; if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }, delay);
+  }
+  loaderEl() {
+    if (this._ld !== undefined) return this._ld;
+    const reduced = typeof window !== 'undefined' && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (this.props.showLoader === false || reduced) { this._ld = null; return null; }
+    const h = React.createElement, mono = { fontFamily: "'IBM Plex Mono',monospace", fontSize: 12, letterSpacing: '.12em', textTransform: 'uppercase' };
+    this._ld = h('div', { ref: this.loaderRef, 'data-loader': '', style: { position: 'fixed', inset: 0, zIndex: 10001, background: '#3F97D3', color: '#0E121B', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 'clamp(24px,4vw,48px)' } },
+      h('div', { style: { ...mono, display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' } }, h('span', null, 'Rasheed Holdings International'), h('span', null, 'Malta · Est. 2019')),
+      h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, flexWrap: 'wrap' } },
+        h('span', { style: { fontSize: 'clamp(28px,4vw,60px)', fontWeight: 800, fontStretch: '125%', textTransform: 'uppercase', letterSpacing: '-.02em', lineHeight: .95, maxWidth: 640 } }, 'Cementing legacies'),
+        h('span', { style: { fontSize: 'clamp(96px,17vw,280px)', fontWeight: 800, fontStretch: '125%', lineHeight: .78, letterSpacing: '-.05em', fontVariantNumeric: 'tabular-nums' } }, h('span', { ref: this.loaderNumRef }, '0'), h('span', { style: { color: '#fff' } }, '%'))));
+    return this._ld;
+  }
+  setF(k) { return e => { const v = e.target.value; this.setState(s => ({ form: { ...s.form, [k]: v }, err: false })); }; }
+  burst(btn) {
+    if (!Element.prototype.animate) return;
+    const r = btn ? btn.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 };
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2, cols = ['#3F97D3', '#FFFFFF', '#7FC0EA', '#0E121B'];
+    for (let i = 0; i < 80; i++) {
+      const p = document.createElement('div'), a = Math.random() * Math.PI * 2, v = 120 + Math.random() * 280, sz = 6 + Math.random() * 9;
+      p.style.cssText = 'position:fixed;left:' + cx + 'px;top:' + cy + 'px;width:' + sz + 'px;height:' + (sz * (Math.random() < .5 ? 1 : .45)) + 'px;background:' + cols[i % 4] + ';pointer-events:none;z-index:9998';
+      document.body.appendChild(p);
+      const dx = Math.cos(a) * v, dy = Math.sin(a) * v - 150, rot = (Math.random() - .5) * 900;
+      p.animate([{ transform: 'translate(-50%,-50%)', opacity: 1 }, { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot / 2 + 'deg)', opacity: 1, offset: .5 }, { transform: 'translate(' + dx * 1.3 + 'px,' + (dy + 400) + 'px) rotate(' + rot + 'deg)', opacity: 0 }], { duration: 1400 + Math.random() * 700, easing: 'cubic-bezier(.2,.6,.4,1)' }).onfinish = () => p.remove();
+    }
+  }
+  renderVals() {
+    const { w, menu, hovDir, form, sent, err } = this.state, wide = w >= 900;
+    const go = id => () => this.go(id);
+    const navItems = [['about', 'About'], ['businesses', 'Businesses'], ['reach', 'Reach'], ['values', 'Values'], ['family', 'Family'], ['contact', 'Contact']].map(([id, label], i) => ({ label, num: '0' + (i + 1), go: go(id) }));
+        const companies = [
+      { name: 'Cem Asia Trading', sector: 'Trading & Shipping', body: 'A specialized trading and shipping company handling cementitious commodities including Clinker, GBFS, Iron Ore and Coal. Since 2012 it has dealt with over 40 million tonnes, with a presence across the Far East, Middle East and Africa.', stats: [{ v: '$2bn+', l: 'Sales turnover' }, { v: '40M+', l: 'Tonnes' }, { v: '1,500+', l: 'Shipments' }], link: 'https://www.cem-asia.com/', linkLabel: 'cem-asia.com', mediaNote: 'Stock footage · Pexels — replace with own', isVideo: true, video: 'https://videos.pexels.com/video-files/2942803/2942803-hd_1280_720_24fps.mp4', videoAlt: 'https://videos.pexels.com/video-files/7687569/7687569-hd_1280_720_30fps.mp4' },
+      { name: 'Rasheed International Estates', sector: 'Real Estate · Est. 2024', body: 'Established in 2024 to invest and develop residential, commercial, and mixed-use properties in Malta and beyond — delivering value-driven real estate by selecting properties with long-term growth potential.', stats: [{ v: '$7m+', l: 'Valuation' }, { v: '2024', l: 'Established' }], mediaNote: 'Motion graphic — swap for property footage', isWindows: true },
+      { name: 'Rasheed Capital', sector: 'Financial Investments', body: 'Building a diversified portfolio across various financial assets and regions. Our advisory and investment financial institutions include Julius Baer, UBS, and Bank of Valletta.', mediaNote: 'Motion graphic — illustrative', isChart: true },
+      { name: 'Aangan Studio', sector: 'Wellness · Late 2026', body: 'A low impact, high intensity, community-first fitness studio in Msida, Malta — bringing its signature Form machine and intentional workout method to Malta.', link: 'https://aangan-studio.com/', linkLabel: 'aangan-studio.com', mediaNote: 'Motion graphic — swap for studio footage', isBreath: true }
+    ].map((c, i) => ({ ...c, num: '0' + (i + 1), stats: c.stats || [], hasStats: !!c.stats, hasLink: !!c.link, isVideo: !!c.isVideo, isWindows: !!c.isWindows, isChart: !!c.isChart, isBreath: !!c.isBreath, cursor: wide ? 'Explore' : '' }));
+    const directors = [
+      { name: 'Jawad Rasheed', role: 'Founder and CEO of Cem Asia.', exp: '35+ years · Cement', quote: 'It is important to acknowledge that a challenge today cannot be met with yesterday’s tools if we expect to be relevant in business tomorrow.', email: 'jawad@rh-intl.com', linkedin: 'https://www.linkedin.com/in/jawad-rasheed-b0919919/' },
+      { name: 'Parveen Rasheed', role: 'Head of Shipping & Legal at Cem Asia. Maritime Lawyer.', exp: '20+ years · Shipping', quote: 'I’m all about investing in people—building strong teams through trust and collaboration.', email: 'parveen@rh-intl.com', linkedin: 'https://www.linkedin.com/in/parveen-rasheed-pg-maritime-law-6237371b0/' },
+      { name: 'Maryam Rasheed', role: 'Graduate of NYU and UPenn.', exp: 'Sustainability consulting', quote: 'I’m passionate about creating meaningful change—helping businesses make a positive impact on the communities they touch.', email: 'maryam@rh-intl.com', linkedin: 'https://www.linkedin.com/in/maryam-rasheed-56043694/' },
+      { name: 'Fatima Rasheed', role: 'Graduate of NYU Stern and UCL.', exp: 'General Manager · RHI', quote: 'Curiosity keeps me pushing boundaries—always exploring new ideas, learning, and finding better ways to grow and succeed.', email: 'fatima@rh-intl.com', linkedin: 'https://www.linkedin.com/in/fatima-rasheed-b8a32a16b/' }
+    ].map((d, i) => { const on = wide && hovDir === i; return { ...d, enter: () => { if (this.state.hovDir !== i) this.setState({ hovDir: i }); }, fill: on ? 1 : 0, nameColor: on ? '#0E121B' : '#FFFFFF', subColor: on ? '#0E121B' : '#C3C9D4', monoColor: on ? '#0E121B' : '#7FC0EA', linkColor: on ? '#0E121B' : '#7FC0EA' }; });
+    const hd = hovDir >= 0 ? directors[hovDir] : null;
+    const values = [
+      { title: 'Adaptability', lead: 'As markets evolve, so do we.', body: 'We remain flexible and open to new opportunities, allowing us to pivot when necessary and seize emerging market trends — proactive, responsive, and resilient in the face of change.' },
+      { title: 'Collaboration', lead: 'Stronger together.', body: 'As a family business, we understand the value of working closely with one another and our partners — building strong relationships, fostering trust, and encouraging teamwork across all levels.' },
+      { title: 'Sustainability', lead: 'Growing with purpose, for today and tomorrow.', body: 'Our business decisions benefit both the present and future. By focusing on responsible investments and practices, we aim to create lasting value for the communities and industries we serve.' },
+      { title: 'Innovation', lead: 'Growing with purpose, for today and tomorrow.', body: 'We are committed to sustainable growth across our financial investments, property management, and trading sectors, with a clear vision for expansion.' }
+    ].map((v, i) => ({ ...v, num: '0' + (i + 1) }));
+    const DEF_H = 'https://videos.pexels.com/video-files/6857819/6857819-hd_1920_1080_24fps.mp4', DEF_R = 'https://videos.pexels.com/video-files/6595363/6595363-hd_1920_1080_24fps.mp4';
+    const hv = (this.props.heroVideoUrl || '').trim(), rv = (this.props.reelVideoUrl || '').trim();
+    const topics = ['Partnerships', 'Investment', 'Cem Asia', 'Real estate', 'Other'].map(t => { const on = form.topic === t; return { label: t, pick: () => this.setState(s => ({ form: { ...s.form, topic: t } })), bg: on ? '#3F97D3' : 'transparent', color: on ? '#0E121B' : '#fff', border: on ? '#3F97D3' : '#3A4356' }; });
+    return {
+      wide, narrow: !wide, navItems, companies, directors, values, loader: this.loaderEl(),
+      cursorOn: wide && this.props.customCursor !== false,
+      heroVideo: hv || DEF_H, heroAlt: hv ? '' : 'https://videos.pexels.com/video-files/6857819/6857819-hd_1280_720_24fps.mp4',
+      reelVideo: rv || DEF_R, reelAlt: rv ? '' : 'https://videos.pexels.com/video-files/6595363/6595363-hd_1280_720_24fps.mp4',
+      hsH: wide ? '420vh' : 'auto', hsPos: wide ? 'sticky' : 'relative', hsInnerH: wide ? '100vh' : 'auto', hsDir: wide ? 'row' : 'column', panelW: wide ? 'min(82vw,1120px)' : 'auto', panelH: wide ? '100%' : 'auto', reelH: wide ? '260vh' : 'auto',
+      sats: [0, 1, 2, 3, 4, 5, 6, 7],
+      windows: Array.from({ length: 48 }, (_, i) => ({ bg: (i * 7) % 5 === 0 ? '#7FC0EA' : '#1B2232' })),
+      nodes: [
+        { label: 'Malta · HQ', x: 215, y: 89, r: 7, tx: 215, ty: 68, anchor: 'middle' },
+        { label: 'Middle East', x: 470, y: 156, r: 8, tx: 470, ty: 186, anchor: 'middle' },
+        { label: 'Far East', x: 881, y: 120, r: 6, tx: 881, ty: 98, anchor: 'middle' },
+        { label: 'East Africa', x: 373, y: 339, r: 6, tx: 373, ty: 368, anchor: 'middle' },
+        { label: 'West Africa', x: 146, y: 273, r: 6, tx: 130, ty: 302, anchor: 'start' }
+      ],
+      figures: [
+        { value: '$2bn+', label: 'Sales turnover', source: 'Cem Asia Trading' },
+        { value: '40M+', label: 'Tonnes traded', source: 'Since 2012' },
+        { value: '1,500+', label: 'Shipments handled', source: 'Far East · Middle East · Africa' },
+        { value: '$7m+', label: 'Property valuation', source: 'Rasheed International Estates' }
+      ],
+      timeline: [
+        { year: '2012', title: 'Cem Asia Trading', text: 'Our first subsidiary — a specialized cement trading company serving an extensive global network.' },
+        { year: '2019', title: 'Rasheed Holdings Intl', text: 'Established on a foundation in cementitious product trading and shipping.' },
+        { year: '2024', title: 'Rasheed Intl Estates', text: 'Owns and manages residential properties across Malta.' },
+        { year: '2026', title: 'Aangan Studio', text: 'A community-first fitness studio opens in Msida.' }
+      ].map((t, i) => ({ ...t, color: i === 3 ? '#3F97D3' : '#0E121B' })),
+      followOp: hd ? 1 : 0, dirQuote: hd ? hd.quote : '', dirName: hd ? hd.name : '',
+      dirLeave: () => this.setState({ hovDir: -1 }),
+      orbitEnter: () => { this.orbitHover = true; }, orbitLeave: () => { this.orbitHover = false; },
+      bounce: e => { const el = e.currentTarget; if (!el.animate || this.reduced) return; el.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-0.18em) rotate(-8deg)', color: '#fff' }, { transform: 'translateY(0) rotate(0)' }], { duration: 650, easing: 'cubic-bezier(.3,1.6,.5,1)' }); },
+      goTop: go('top'), goAbout: go('about'), goBusinesses: go('businesses'), goContact: go('contact'), goContactForm: go('contact-form'),
+      menuOpen: menu && !wide, menuLabel: menu ? 'Close' : 'Menu', toggleMenu: () => this.setState({ menu: !menu }),
+      f: form, topics, sent, notSent: !sent, formError: err,
+      setName: this.setF('name'), setEmail: this.setF('email'), setCompany: this.setF('company'), setMessage: this.setF('message'),
+      submit: e => { const btn = e && e.currentTarget; const ok = form.name.trim() && /\S+@\S+\.\S+/.test(form.email) && form.message.trim(); if (ok) this.burst(btn); this.setState(ok ? { sent: true, err: false } : { err: true }); },
+      reset: () => this.setState({ sent: false, form: { name: '', email: '', company: '', message: '', topic: 'Partnerships' } })
+    };
+  }
+}
+</script>
+</body>
+</html>

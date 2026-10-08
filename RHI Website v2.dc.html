@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F4F0;color:#2B3140;font-family:'Archivo',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2F86C4;text-decoration:none}
+a:hover{color:#1F2533}
+*{box-sizing:border-box}
+input,textarea,select{font-family:inherit}
+@keyframes rhiZoom{from{transform:scale(1.02)}to{transform:scale(1.14) translate(-1.5%,-1%)}}
+@keyframes rhiCue{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(8px);opacity:1}}
+</style>
+</helmet>
+<div style="display:flex;min-height:100vh;align-items:stretch">
+
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+<aside style="position:sticky;top:0;height:100vh;flex:0 0 260px;display:flex;flex-direction:column;justify-content:space-between;background:#121722;color:#fff;z-index:5">
+  <div style="display:flex;flex-direction:column;gap:48px">
+    <div onClick="{{ goHome }}" style="cursor:pointer;background:#fff;width:260px;height:150px;display:flex;align-items:center;justify-content:center">
+      <img src="assets/logo.jpeg" alt="RH International" style="width:140px;height:140px;display:block">
+    </div>
+    <nav style="display:flex;flex-direction:column;padding:0 28px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+        <div onClick="{{ n.go }}" style="cursor:pointer;display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid #232A38;color:{{ n.color }}" style-hover="color:#fff">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ n.numColor }}">{{ n.num }}</span>
+          <span style="font-size:17px;font-weight:600;flex:1">{{ n.label }}</span>
+          <span style="width:7px;height:7px;background:{{ n.dot }};display:block"></span>
+        </div>
+      </sc-for>
+    </nav>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;padding:28px">
+    <div onClick="{{ goContact }}" style="cursor:pointer;background:#3F97D3;color:#fff;padding:14px 18px;font-weight:600;font-size:14px;display:flex;justify-content:space-between" style-hover="background:#2F86C4"><span>Get in touch</span><span>→</span></div>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7A8294">Siggiewi · Malta</span>
+  </div>
+</aside>
+</sc-if>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+<sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+<header style="position:sticky;top:0;z-index:20;background:#121722;display:flex;align-items:center;justify-content:space-between;padding-right:16px">
+  <div onClick="{{ goHome }}" style="cursor:pointer;background:#fff;width:76px;height:76px;display:flex;align-items:center;justify-content:center"><img src="assets/logo.jpeg" alt="RH International" style="width:68px;height:68px"></div>
+  <div onClick="{{ toggleMenu }}" style="cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:14px;color:#fff">{{ menuLabel }}</div>
+</header>
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:sticky;top:76px;z-index:19;background:#121722;padding:8px 24px 28px;display:flex;flex-direction:column">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+      <div onClick="{{ n.go }}" style="cursor:pointer;padding:16px 0;font-size:24px;font-weight:700;color:{{ n.color }};border-bottom:1px solid #232A38;display:flex;gap:16px;align-items:baseline"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#3F97D3">{{ n.num }}</span>{{ n.label }}</div>
+    </sc-for>
+  </div>
+</sc-if>
+</sc-if>
+
+<main style="flex:1">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <section data-screen-label="Home — Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#121722;color:#fff">
+    <div style="position:absolute;inset:0;overflow:hidden">{{ heroMedia }}</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,23,34,.25) 0%,rgba(18,23,34,.2) 35%,rgba(18,23,34,.92) 100%)"></div>
+    <sc-if value="{{ noVideo }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;top:24px;right:24px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(18,23,34,.55);padding:6px 10px">Video placeholder — set URL in Tweaks</div>
+    </sc-if>
+    <div style="position:relative;padding:clamp(80px,12vh,140px) clamp(24px,5vw,72px) 0;display:flex;flex-direction:column;gap:28px;max-width:1240px">
+      <div data-reveal="0" style="display:flex;align-items:center;gap:14px">
+        <span style="width:40px;height:2px;background:#3F97D3;display:block"></span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#CFE6F6">Family holding company · Est. 2019</span>
+      </div>
+      <h1 data-reveal="1" style="margin:0;font-size:clamp(48px,7.6vw,124px);line-height:.94;font-weight:800;letter-spacing:-.035em;text-wrap:balance">Cementing <span style="color:#5BB0E6">Legacies</span> with Continued Excellence</h1>
+      <div data-reveal="3" style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
+        <p data-reveal="2" style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.55;max-width:600px;color:#E3E7ED;text-wrap:pretty">Guided by trust and integrity, Rasheed Holdings has built a solid foundation across global cement trading and shipping, international property management, and strategic financial investments.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div onClick="{{ goPortfolio }}" style="cursor:pointer;background:#3F97D3;color:#fff;padding:16px 28px;font-weight:600;font-size:15px;white-space:nowrap;flex-shrink:0" style-hover="background:#2F86C4">Our portfolio →</div>
+          <div onClick="{{ goAbout }}" style="cursor:pointer;border:1px solid rgba(255,255,255,.55);color:#fff;padding:15px 28px;font-weight:600;font-size:15px;white-space:nowrap;flex-shrink:0" style-hover="background:rgba(255,255,255,.1)">Who we are</div>
+        </div>
+      </div>
+    </div>
+    <div style="position:relative;margin-top:clamp(40px,7vh,72px);border-top:1px solid rgba(255,255,255,.18);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <sc-for list="{{ ventures }}" as="v" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" onClick="{{ goPortfolio }}" style="cursor:pointer;padding:22px clamp(24px,2.5vw,36px);border-right:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:6px" style-hover="background:rgba(255,255,255,.06)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">{{ v.num }} · {{ v.sector }}</span>
+          <span style="font-size:16px;font-weight:600;color:#fff">{{ v.name }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-screen-label="Home — Statement" style="padding:clamp(80px,11vw,150px) clamp(24px,5vw,72px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:32px">
+    <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2F86C4">(01) Who we are</span>
+    <div style="grid-column:span 3;min-width:min(100%,560px);display:flex;flex-direction:column;gap:36px">
+      <p data-reveal="1" style="margin:0;font-size:clamp(28px,3.4vw,50px);line-height:1.12;font-weight:600;letter-spacing:-.025em;color:#1F2533;text-wrap:pretty">A family business built on cement trading, now spanning <span style="color:#2F86C4">shipping, property, capital and wellness</span> — across the Far East, Middle East, Africa and Europe.</p>
+      <div onClick="{{ goAbout }}" style="cursor:pointer;display:flex;gap:10px;align-items:center;font-weight:600;font-size:15px;color:#1F2533;border-bottom:2px solid #3F97D3;padding-bottom:6px;align-self:flex-start">Our journey <span style="color:#2F86C4">→</span></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home — Overview" style="padding:0 clamp(24px,5vw,72px) clamp(80px,10vw,130px);display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;border-top:1px solid #1F2533;padding-top:28px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2F86C4">(02) Overview</span>
+        <h2 data-reveal="" style="margin:0;font-size:clamp(34px,4vw,60px);line-height:1;font-weight:800;letter-spacing:-.03em;color:#1F2533">Our businesses</h2>
+      </div>
+      <div onClick="{{ goPortfolio }}" style="cursor:pointer;font-weight:600;font-size:15px;color:#1F2533;display:flex;gap:10px" style-hover="color:#2F86C4">View full portfolio <span style="color:#2F86C4">→</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:20px">
+      <sc-for list="{{ companies }}" as="c" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" onClick="{{ goPortfolio }}" style="cursor:pointer;background:#fff;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s" style-hover="transform:translateY(-4px);box-shadow:0 24px 48px -24px rgba(18,23,34,.35)">
+          <div style="position:relative;aspect-ratio:16/9;background:repeating-linear-gradient(135deg,#E9E7E1 0 12px,#E1DED7 12px 24px);display:flex;justify-content:space-between;align-items:flex-start;padding:16px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#6A6F7A;background:#F5F4F0;padding:5px 8px">{{ c.imageNote }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#fff;background:#121722;padding:6px 9px">{{ c.num }}</span>
+          </div>
+          <div style="padding:28px;display:flex;flex-direction:column;gap:16px;flex:1">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#2F86C4">{{ c.sector }}</span>
+            <h3 style="margin:0;font-size:clamp(24px,2.2vw,30px);font-weight:700;letter-spacing:-.02em;color:#1F2533">{{ c.name }}</h3>
+            <p style="margin:0;font-size:15px;line-height:1.6;color:#5A6070;text-wrap:pretty;flex:1">{{ c.short }}</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E6E4DE;padding-top:16px;gap:16px">
+              <span style="font-size:17px;font-weight:700;color:#1F2533">{{ c.figure }}</span>
+              <span style="width:36px;height:36px;flex-shrink:0;background:#3F97D3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px">→</span>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-screen-label="Home — Key figures" style="background:#121722;color:#fff;padding:clamp(72px,9vw,120px) clamp(24px,5vw,72px);display:flex;flex-direction:column;gap:64px;position:relative;overflow:hidden">
+    <span style="position:absolute;right:-2vw;bottom:-6vw;font-size:34vw;font-weight:900;letter-spacing:-.06em;line-height:.8;color:#182030;pointer-events:none">RH</span>
+    <div style="position:relative;display:flex;flex-direction:column;gap:16px">
+      <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7FC0EA">(03) Key figures</span>
+      <h2 data-reveal="" style="margin:0;font-size:clamp(34px,4vw,60px);line-height:1;font-weight:800;letter-spacing:-.03em;max-width:760px">Measured in tonnes, shipments and value.</h2>
+    </div>
+    <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));border-top:1px solid rgba(255,255,255,.2)">
+      <sc-for list="{{ figures }}" as="f" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" style="display:flex;flex-direction:column;gap:14px;padding:32px 28px 8px 0;border-right:1px solid rgba(255,255,255,.1);margin-right:28px">
+          <span style="width:10px;height:10px;background:#3F97D3;display:block"></span>
+          <span data-count="" style="font-size:clamp(52px,5.4vw,88px);font-weight:800;letter-spacing:-.045em;line-height:1">{{ f.value }}</span>
+          <span style="font-size:16px;font-weight:600">{{ f.label }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B5">{{ f.source }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-screen-label="Home — Our values" style="padding:clamp(80px,10vw,130px) clamp(24px,5vw,72px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:48px 80px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:24px;position:sticky;top:40px">
+      <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2F86C4">(04) Our values</span>
+      <h2 data-reveal="" style="margin:0;font-size:clamp(34px,4vw,60px);line-height:1;font-weight:800;letter-spacing:-.03em;color:#1F2533">How we build for the long term.</h2>
+      <div style="display:flex;align-items:flex-end;gap:20px">
+        <span style="font-size:clamp(120px,14vw,220px);font-weight:900;letter-spacing:-.06em;line-height:.8;color:#3F97D3">{{ activeNum }}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8A8F9A;padding-bottom:8px">/ 04</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;border-top:1px solid #1F2533">
+      <sc-for list="{{ values }}" as="v" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" onClick="{{ v.toggle }}" onMouseEnter="{{ v.toggle }}" style="cursor:pointer;padding:30px 0;border-bottom:1px solid #D9D7D0;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:baseline;gap:24px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:{{ v.numColor }}">{{ v.num }}</span>
+            <h3 style="margin:0;flex:1;font-size:clamp(28px,3vw,42px);font-weight:700;letter-spacing:-.025em;color:{{ v.titleColor }}">{{ v.title }}</h3>
+            <span style="font-size:24px;color:#2F86C4;width:20px;text-align:center">{{ v.sign }}</span>
+          </div>
+          <sc-if value="{{ v.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px;padding-left:48px;max-width:580px">
+              <span style="font-size:19px;font-weight:600;color:#1F2533">{{ v.lead }}</span>
+              <p style="margin:0;font-size:16px;line-height:1.65;color:#5A6070;text-wrap:pretty">{{ v.body }}</p>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Who we are — Intro" style="position:relative;overflow:hidden;background:#121722;color:#fff;padding:clamp(80px,12vw,160px) clamp(24px,5vw,72px) clamp(56px,7vw,96px);display:flex;flex-direction:column;gap:28px">
+    <span style="position:absolute;right:-2vw;top:-4vw;font-size:30vw;font-weight:900;letter-spacing:-.06em;line-height:.8;color:#182030;pointer-events:none">RH</span>
+    <span style="position:relative;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7FC0EA">Who we are</span>
+    <h1 data-reveal="1" style="position:relative;margin:0;font-size:clamp(46px,6.8vw,108px);line-height:.95;font-weight:800;letter-spacing:-.035em;max-width:1100px;text-wrap:balance">Dedicated to Success &amp; <span style="color:#5BB0E6">Sustainable Growth</span></h1>
+  </section>
+  <section data-screen-label="Who we are — Journey" style="padding:clamp(72px,9vw,120px) clamp(24px,5vw,72px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:56px 80px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px;font-size:17px;line-height:1.7;color:#4A5060">
+      <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2F86C4">(01) Our journey</span>
+      <p style="margin:0;font-size:clamp(22px,2vw,28px);line-height:1.35;font-weight:600;letter-spacing:-.015em;color:#1F2533;text-wrap:pretty">Established in 2019, Rasheed Holdings Intl was built on a foundation in cementitious product trading and shipping.</p>
+      <p style="margin:0;text-wrap:pretty">Our first subsidiary, Cem Asia Trading, founded in 2012, is a specialized cement trading company that has grown to serve an extensive global network and remains dedicated to meeting the demands of the cement ecosystem.</p>
+      <p style="margin:0;text-wrap:pretty">As we grew, we embraced change and innovation to expand our portfolio to include Rasheed International Estates in 2024. This subsidiary owns and manages residential properties across Malta.</p>
+      <p style="margin:0;text-wrap:pretty">Our journey is marked by a commitment to create shareholder value while contributing positively to the communities we serve.</p>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" style="display:grid;grid-template-columns:auto 1fr;gap:28px;padding:28px 0;border-top:1px solid #D9D7D0;align-items:baseline">
+          <span style="font-size:clamp(40px,4vw,60px);font-weight:800;letter-spacing:-.04em;line-height:1;color:{{ t.color }}">{{ t.year }}</span>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:18px;font-weight:700;color:#1F2533">{{ t.title }}</span>
+            <span style="font-size:15px;line-height:1.5;color:#5A6070">{{ t.text }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+  <section data-screen-label="Who we are — Directors" style="background:#EBE9E3;padding:clamp(72px,9vw,120px) clamp(24px,5vw,72px);display:flex;flex-direction:column;gap:48px">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:24px 64px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span data-reveal="" style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2F86C4">(02) Leadership</span>
+        <h2 data-reveal="" style="margin:0;font-size:clamp(34px,4vw,60px);line-height:1;font-weight:800;letter-spacing:-.03em;color:#1F2533">Our Directors</h2>
+      </div>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:#5A6070;max-width:460px">As a family-owned company, we prioritize trust, collaboration, and shared values in everything we do.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px">
+      <sc-for list="{{ directors }}" as="d" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" style="background:#fff;display:flex;flex-direction:column">
+          <div style="padding:24px;display:flex;flex-direction:column;gap:14px;flex:1">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#2F86C4">{{ d.exp }}</span>
+              <h3 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em;color:#1F2533">{{ d.name }}</h3>
+              <span style="font-size:14px;line-height:1.5;color:#5A6070">{{ d.role }}</span>
+            </div>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#1F2533;text-wrap:pretty;flex:1;border-left:2px solid #3F97D3;padding-left:14px">“{{ d.quote }}”</p>
+            <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:600;border-top:1px solid #E6E4DE;padding-top:14px;flex-wrap:wrap">
+              <a href="mailto:{{ d.email }}">{{ d.email }}</a>
+              <a href="{{ d.linkedin }}" target="_blank" style="color:#1F2533">LinkedIn ↗</a>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+  <section style="padding:clamp(72px,9vw,120px) clamp(24px,5vw,72px)">
+    <p data-reveal="" style="margin:0;font-size:clamp(26px,3vw,44px);line-height:1.18;font-weight:600;letter-spacing:-.025em;color:#1F2533;max-width:1040px;text-wrap:pretty">Our diverse backgrounds and experiences are our greatest strengths. What unites us is a <span style="color:#2F86C4">shared commitment to growth, success, and creating a positive impact</span> through everything we do.</p>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isPortfolio }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Portfolio — Intro" style="position:relative;overflow:hidden;background:#121722;color:#fff;padding:clamp(80px,12vw,160px) clamp(24px,5vw,72px) 0;display:flex;flex-direction:column;gap:28px">
+    <span style="position:absolute;right:-2vw;top:-4vw;font-size:30vw;font-weight:900;letter-spacing:-.06em;line-height:.8;color:#182030;pointer-events:none">RH</span>
+    <span style="position:relative;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7FC0EA">Our portfolio</span>
+    <h1 data-reveal="1" style="position:relative;margin:0;font-size:clamp(46px,6.8vw,108px);line-height:.95;font-weight:800;letter-spacing:-.035em;max-width:1100px;text-wrap:balance">Expanding Horizons, <span style="color:#5BB0E6">Navigating Growth</span></h1>
+    <p style="position:relative;margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.55;max-width:680px;color:#D5DAE3;text-wrap:pretty">Rasheed Holdings International is a dynamic family holding company engaged in diverse business ventures, including shipping/trading, property investments, as well as financial investments.</p>
+    <div style="position:relative;margin-top:40px;border-top:1px solid rgba(255,255,255,.18);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-left:calc(-1 * clamp(24px,5vw,72px));margin-right:calc(-1 * clamp(24px,5vw,72px))">
+      <sc-for list="{{ ventures }}" as="v" hint-placeholder-count="4">
+        <div data-reveal="{{ $index }}" style="padding:22px clamp(24px,2.5vw,36px);border-right:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">{{ v.num }} · {{ v.sector }}</span>
+          <span style="font-size:16px;font-weight:600">{{ v.name }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+  <div style="display:flex;flex-direction:column">
+    <sc-for list="{{ companies }}" as="c" hint-placeholder-count="4">
+      <section data-screen-label="Portfolio — {{ c.name }}" style="padding:clamp(64px,8vw,110px) clamp(24px,5vw,72px);border-bottom:1px solid #D9D7D0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:48px 80px;align-items:center">
+        <div data-reveal="" style="position:relative;aspect-ratio:5/4;background:repeating-linear-gradient(135deg,#E9E7E1 0 12px,#E1DED7 12px 24px);display:flex;align-items:flex-end;justify-content:space-between;padding:18px;order:{{ c.order }}">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#6A6F7A;background:#F5F4F0;padding:5px 8px">{{ c.imageNote }}</span>
+          <span style="font-size:clamp(64px,7vw,110px);font-weight:900;letter-spacing:-.05em;line-height:.8;color:#3F97D3">{{ c.num }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#2F86C4">{{ c.sector }}</span>
+          <h2 data-reveal="" style="margin:0;font-size:clamp(34px,3.8vw,56px);line-height:1;font-weight:800;letter-spacing:-.03em;color:#1F2533">{{ c.fullName }}</h2>
+          <sc-for list="{{ c.paras }}" as="p" hint-placeholder-count="1">
+            <p style="margin:0;font-size:17px;line-height:1.65;color:#4A5060;text-wrap:pretty">{{ p }}</p>
+          </sc-for>
+          <sc-if value="{{ c.hasStats }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;border-top:1px solid #1F2533;padding-top:22px">
+              <sc-for list="{{ c.stats }}" as="s" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-size:clamp(28px,2.6vw,38px);font-weight:800;letter-spacing:-.03em;color:#1F2533">{{ s.v }}</span>
+                  <span style="font-size:13px;color:#5A6070">{{ s.l }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ c.hasLink }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ c.link }}" target="_blank" style="align-self:flex-start;background:#121722;color:#fff;font-weight:600;font-size:14px;padding:14px 22px;display:flex;gap:10px" style-hover="background:#3F97D3;color:#fff">Visit {{ c.linkLabel }} <span>↗</span></a>
+          </sc-if>
+        </div>
+      </section>
+    </sc-for>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Contact — Intro" style="position:relative;overflow:hidden;background:#121722;color:#fff;padding:clamp(80px,12vw,160px) clamp(24px,5vw,72px) clamp(56px,7vw,96px);display:flex;flex-direction:column;gap:28px">
+    <span style="position:absolute;right:-2vw;top:-4vw;font-size:30vw;font-weight:900;letter-spacing:-.06em;line-height:.8;color:#182030;pointer-events:none">RH</span>
+    <span style="position:relative;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7FC0EA">Contact us</span>
+    <h1 data-reveal="1" style="position:relative;margin:0;font-size:clamp(46px,6.8vw,108px);line-height:.95;font-weight:800;letter-spacing:-.035em;max-width:1100px;text-wrap:balance">Let’s build something <span style="color:#5BB0E6">lasting</span>.</h1>
+    <p style="position:relative;margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.55;max-width:600px;color:#D5DAE3;text-wrap:pretty">For partnerships, investment enquiries or questions about any of our businesses, reach out and our team will respond promptly.</p>
+  </section>
+  <section data-screen-label="Contact — Form" style="padding:clamp(64px,8vw,110px) clamp(24px,5vw,72px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:56px 80px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:36px">
+      <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #1F2533;padding-top:20px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#2F86C4">General enquiries</span>
+        <a href="mailto:fatima@rh-intl.com" style="font-size:clamp(24px,2.4vw,34px);font-weight:700;letter-spacing:-.02em;color:#1F2533" style-hover="color:#2F86C4">fatima@rh-intl.com</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #D9D7D0;padding-top:20px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#2F86C4">Registered office</span>
+        <span style="font-size:18px;line-height:1.55;color:#1F2533">Rasheed Holdings International Ltd.<br>12, Sqaq San Gwann Nru. 2,<br>Siggiewi, SGW 1471, Malta</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #D9D7D0;padding-top:20px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#2F86C4">Directors</span>
+        <sc-for list="{{ directors }}" as="d" hint-placeholder-count="4">
+          <div style="display:flex;justify-content:space-between;gap:16px;font-size:15px;flex-wrap:wrap">
+            <span style="font-weight:600;color:#1F2533">{{ d.name }}</span>
+            <a href="mailto:{{ d.email }}">{{ d.email }}</a>
+          </div>
+        </sc-for>
+      </div>
+      <div style="aspect-ratio:16/10;background:repeating-linear-gradient(135deg,#E9E7E1 0 12px,#E1DED7 12px 24px);display:flex;align-items:flex-end;padding:16px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#6A6F7A;background:#F5F4F0;padding:5px 8px">Map — Siggiewi, Malta</span>
+      </div>
+    </div>
+    <div data-reveal="1" style="background:#fff;padding:clamp(28px,3.5vw,48px);display:flex;flex-direction:column;gap:28px">
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:28px">
+          <h2 data-reveal="" style="margin:0;font-size:clamp(26px,2.4vw,34px);font-weight:800;letter-spacing:-.02em;color:#1F2533">Send an enquiry</h2>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5A6070">Regarding</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+                <div onClick="{{ t.pick }}" style="cursor:pointer;padding:10px 14px;font-size:14px;font-weight:600;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+            <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5A6070">Full name</span><input value="{{ f.name }}" onChange="{{ setName }}" placeholder="Your name" style="border:none;border-bottom:1px solid #C9C6BE;padding:10px 0;font-size:17px;background:transparent;outline:none;color:#1F2533"></label>
+            <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5A6070">Email</span><input value="{{ f.email }}" onChange="{{ setEmail }}" placeholder="you@company.com" style="border:none;border-bottom:1px solid #C9C6BE;padding:10px 0;font-size:17px;background:transparent;outline:none;color:#1F2533"></label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5A6070">Company (optional)</span><input value="{{ f.company }}" onChange="{{ setCompany }}" placeholder="Organisation" style="border:none;border-bottom:1px solid #C9C6BE;padding:10px 0;font-size:17px;background:transparent;outline:none;color:#1F2533"></label>
+          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5A6070">Message</span><textarea value="{{ f.message }}" onChange="{{ setMessage }}" rows="5" placeholder="How can we help?" style="border:1px solid #C9C6BE;padding:12px;font-size:16px;background:transparent;outline:none;resize:vertical;color:#1F2533"></textarea></label>
+          <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:14px;color:#B4442F">Please add your name, a valid email and a message.</span>
+          </sc-if>
+          <div onClick="{{ submit }}" style="cursor:pointer;align-self:flex-start;background:#3F97D3;color:#fff;padding:16px 30px;font-weight:600;font-size:15px;display:flex;gap:10px" style-hover="background:#2F86C4">Send message <span>→</span></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:20px;padding:24px 0">
+          <span style="width:48px;height:48px;background:#3F97D3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px">✓</span>
+          <h2 data-reveal="" style="margin:0;font-size:clamp(26px,2.4vw,34px);font-weight:800;letter-spacing:-.02em;color:#1F2533">Thank you, {{ f.name }}.</h2>
+          <p style="margin:0;font-size:17px;line-height:1.6;color:#5A6070">Your message has been received. A member of our team will be in touch at {{ f.email }}.</p>
+          <div onClick="{{ reset }}" style="cursor:pointer;align-self:flex-start;font-weight:600;font-size:15px;color:#1F2533;border-bottom:2px solid #3F97D3;padding-bottom:4px">Send another message</div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ showCta }}" hint-placeholder-val="{{ true }}">
+  <section style="background:#3F97D3;color:#fff;padding:clamp(56px,7vw,96px) clamp(24px,5vw,72px);display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap">
+    <h2 data-reveal="" style="margin:0;font-size:clamp(32px,4vw,60px);line-height:1;font-weight:800;letter-spacing:-.03em;max-width:760px;text-wrap:balance">Interested in partnering with us?</h2>
+    <div onClick="{{ goContact }}" style="cursor:pointer;background:#121722;color:#fff;padding:18px 32px;font-weight:600;font-size:16px;white-space:nowrap;display:flex;gap:12px" style-hover="background:#fff;color:#121722">Contact us <span>→</span></div>
+  </section>
+</sc-if>
+
+</main>
+
+<footer style="background:#0D111A;color:#C9CED8;padding:clamp(56px,7vw,96px) clamp(24px,5vw,72px) 32px;display:flex;flex-direction:column;gap:64px;overflow:hidden">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Office</span>
+      <span style="font-size:15px;line-height:1.6">Rasheed Holdings International Ltd.<br>12, Sqaq San Gwann Nru. 2,<br>Siggiewi, SGW 1471, Malta</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Reach out</span>
+      <a href="mailto:fatima@rh-intl.com" style="font-size:20px;font-weight:600;color:#fff">fatima@rh-intl.com</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Explore</span>
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+        <span onClick="{{ n.go }}" style="cursor:pointer;font-size:15px;color:#C9CED8" style-hover="color:#fff">{{ n.label }}</span>
+      </sc-for>
+    </div>
+  </div>
+  <div data-reveal="" style="font-size:clamp(48px,10.5vw,190px);font-weight:900;letter-spacing:-.055em;line-height:.85;color:#fff;white-space:nowrap">Rasheed<span style="color:#3F97D3">.</span></div>
+  <div style="border-top:1px solid #232A38;padding-top:20px;font-size:13px;color:#7A8294;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap"><span>© 2026 Rasheed Holdings International Ltd.</span><span>Malta</span></div>
+</footer>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroVideoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;}}">
+class Component extends DCLogic {
+  state = { page: 'home', openValue: 0, w: typeof window !== 'undefined' ? window.innerWidth : 1400, menu: false, form: { name: '', email: '', company: '', message: '', topic: 'Partnerships' }, sent: false, err: false };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onR);
+    this.onR();
+    this.initReveal();
+    const h = (location.hash || '').slice(1);
+    if (['home', 'about', 'portfolio', 'contact'].includes(h)) this.setState({ page: h });
+  }
+
+  initReveal() {
+    if (typeof IntersectionObserver === 'undefined' || !Element.prototype.animate) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; this.io.unobserve(el);
+      if (el.__rv) el.__rv.play();
+      el.querySelectorAll('[data-count]').forEach(c => this.countUp(c, el.__delay || 0));
+    }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    const scan = () => document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
+      el.setAttribute('data-rv', '1');
+      const i = Math.min(parseInt(el.getAttribute('data-reveal')) || 0, 6);
+      el.__delay = i * 110;
+      const a = el.animate([{ opacity: 0, transform: 'translateY(36px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 1000, delay: el.__delay, easing: 'cubic-bezier(.16,.84,.24,1)', fill: 'both' });
+      a.onfinish = () => a.cancel(); el.__rv = a; this.rvs.push(el);
+      if (el.getBoundingClientRect().top < window.innerHeight) { el.querySelectorAll('[data-count]').forEach(c => this.countUp(c, el.__delay)); }
+      else { a.pause(); this.io.observe(el); }
+    });
+    this.rvs = [];
+    const finishAll = above => this.rvs.forEach(el => { const a = el.__rv; if (a && a.playState !== 'finished' && (!above || el.getBoundingClientRect().top < window.innerHeight)) { try { a.finish(); } catch (e) {} } });
+    scan();
+    this.safety = setInterval(() => finishAll(true), 2500);
+    this.onPrint = () => finishAll(false);
+    window.addEventListener('beforeprint', this.onPrint);
+    this.mo = new MutationObserver(() => { clearTimeout(this.mt); this.mt = setTimeout(scan, 30); });
+    this.mo.observe(document.body, { childList: true, subtree: true });
+  }
+  countUp(el, delay) {
+    const node = el.firstChild; if (!node || node.nodeType !== 3) return;
+    const orig = node.nodeValue, m = orig.match(/[\d,.]+/); if (!m) return;
+    const target = parseFloat(m[0].replace(/,/g, '')), comma = m[0].includes(',');
+    node.nodeValue = orig.replace(m[0], '0');
+    setTimeout(() => {
+      const t0 = performance.now(), D = 1700;
+      const step = now => { const p = Math.min(1, (now - t0) / D), v = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        node.nodeValue = p < 1 ? orig.replace(m[0], comma ? v.toLocaleString('en-US') : String(v)) : orig;
+        if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }, delay);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); clearInterval(this.safety); this.onPrint && window.removeEventListener('beforeprint', this.onPrint); }
+  go(page) { this.setState({ page, menu: false }); try { history.replaceState(null, '', '#' + page); } catch (e) {} window.scrollTo(0, 0); }
+  setF(k) { return e => { const v = e.target.value; this.setState(s => ({ form: { ...s.form, [k]: v }, err: false })); }; }
+  renderVals() {
+    const { page, openValue, w, menu, form, sent, err } = this.state;
+    const wide = w >= 900;
+    const nav = [['home', 'Home'], ['about', 'Who we are'], ['portfolio', 'Our portfolio'], ['contact', 'Contact us']].map(([k, label], i) => ({
+      label, num: String(i + 1).padStart(2, '0'), go: () => this.go(k),
+      color: page === k ? '#FFFFFF' : '#9AA3B5', numColor: page === k ? '#5BB0E6' : '#4F5868', dot: page === k ? '#3F97D3' : 'transparent'
+    }));
+    const companies = [
+      { name: 'Cem Asia Trading', fullName: 'Cem Asia Trading DMCC', sector: 'Trading & Shipping', figure: '$2bn+ Sales Turnover', short: 'Since 2012, it has dealt with over 40 million tonnes of cementitious products and handled 1,500+ shipments.',
+        paras: ['Cem Asia is a specialized trading and shipping company handling cementitious commodities including Clinker, GBFS, Iron Ore, Coal, and more.', 'Since 2012, it has dealt with over 40 million tonnes of cementitious products. With a presence across the Far East, Middle East, and Africa, Cem Asia has handled over 1,500+ shipments since its inception in 2012.'],
+        stats: [{ v: '$2bn+', l: 'Sales turnover' }, { v: '40M+', l: 'Tonnes traded' }, { v: '1,500+', l: 'Shipments' }], link: 'https://www.cem-asia.com/', linkLabel: 'cem-asia.com', imageNote: 'Bulk carrier / port image' },
+      { name: 'Rasheed International Estates', fullName: 'Rasheed International Estates', sector: 'Real Estate', figure: '$7m+ Valuation', short: 'Established in 2024 to invest and develop residential, commercial, and mixed-use properties in Malta and beyond.',
+        paras: ['Rasheed International Estates was established in 2024 to invest and develop residential, commercial, and mixed-use properties in Malta and beyond. Its mission is to deliver value-driven real estate solutions by carefully selecting properties that offer long-term growth potential.'],
+        stats: [{ v: '$7m+', l: 'Portfolio valuation' }, { v: '2024', l: 'Established' }], imageNote: 'Malta property image' },
+      { name: 'Rasheed Capital', fullName: 'Rasheed Capital', sector: 'Financial Investments', figure: 'Julius Baer · UBS · BOV', short: 'The family investment arm, focusing on strategic financial investments and long-term returns.',
+        paras: ['Rasheed Capital focuses on building a diversified portfolio across various different financial assets and regions. Our advisory and investment financial institutions include Julius Baer, UBS, and Bank of Valletta.'], imageNote: 'Abstract / architecture image' },
+      { name: 'Aangan Studio', fullName: 'Aangan Studio', sector: 'Wellness · Late 2026', figure: 'Msida, Malta', short: 'Premium low impact, high intensity fitness studio with community events — fitness for every body, every season of life.',
+        paras: ['Launching late 2026, Aangan Studio is a low impact, high intensity fitness studio in Msida, Malta. Aangan is a community-first fitness space, bringing its signature Form machine and intentional workout method to Malta.'], link: 'https://aangan-studio.com/', linkLabel: 'aangan-studio.com', imageNote: 'Aangan studio interior' }
+    ].map((c, i) => ({ ...c, num: String(i + 1).padStart(2, '0'), order: wide && i % 2 ? 2 : 0, hasStats: !!c.stats, stats: c.stats || [], hasLink: !!c.link }));
+    const ventures = companies.map(c => ({ num: c.num, name: c.name, sector: c.sector.split(' · ')[0] }));
+    const values = [
+      { title: 'Adaptability', lead: 'As markets evolve, so do we.', body: 'Adaptability is key to our success. We remain flexible and open to new opportunities, allowing us to pivot when necessary and seize emerging market trends. We prioritize being proactive, responsive, and resilient in the face of change.' },
+      { title: 'Collaboration', lead: 'Stronger together.', body: 'As a family business, we understand the value of working closely with one another and our partners. We believe in building strong relationships, fostering trust, and encouraging teamwork across all levels.' },
+      { title: 'Sustainability', lead: 'Growing with purpose, for today and tomorrow.', body: 'We are committed to sustainable growth, ensuring that our business decisions benefit both the present and future. By focusing on responsible investments and practices, we aim to create lasting value, not just for our company but for the communities and industries we serve.' },
+      { title: 'Innovation', lead: 'Growing with purpose, for today and tomorrow.', body: 'We are committed to sustainable growth across our financial investments, property management, and trading sectors, with a clear vision for expansion. By focusing on responsible investments and practices, we aim to create lasting value, not only for our company but also for the communities and industries we serve.' }
+    ].map((v, i) => ({ ...v, num: String(i + 1).padStart(2, '0'), open: openValue === i, sign: openValue === i ? '–' : '+', numColor: openValue === i ? '#2F86C4' : '#8A8F9A', titleColor: openValue === i ? '#1F2533' : '#8A8F9A', toggle: () => { if (this.state.openValue !== i) this.setState({ openValue: i }); } }));
+    const W = 'https://static.wixstatic.com/media/';
+    const directors = [
+      { name: 'Jawad Rasheed', role: 'Founder and CEO of Cem Asia.', exp: '35+ years · Cement', quote: 'It is important to acknowledge that a challenge today cannot be met with yesterday’s tools if we expect to be relevant in business tomorrow.', email: 'jawad@rh-intl.com', linkedin: 'https://www.linkedin.com/in/jawad-rasheed-b0919919/', photo: W + '568b63_2ef8a2168b494f0bbe7d4c10c0faffab~mv2.jpg' },
+      { name: 'Parveen Rasheed', role: 'Head of Shipping & Legal at Cem Asia. Maritime Lawyer.', exp: '20+ years · Shipping', quote: 'I’m all about investing in people—building strong teams through trust and collaboration.', email: 'parveen@rh-intl.com', linkedin: 'https://www.linkedin.com/in/parveen-rasheed-pg-maritime-law-6237371b0/', photo: W + '568b63_f2d5d41dd3824023978d001e38d3faca~mv2.jpg' },
+      { name: 'Maryam Rasheed', role: 'Graduate of NYU and UPenn.', exp: 'Sustainability consulting', quote: 'I’m passionate about creating meaningful change—helping businesses make a positive impact on the communities they touch.', email: 'maryam@rh-intl.com', linkedin: 'https://www.linkedin.com/in/maryam-rasheed-56043694/', photo: W + '568b63_1de4ac97dee5409996b8465fa3881e78~mv2.jpeg' },
+      { name: 'Fatima Rasheed', role: 'Graduate of NYU Stern and UCL.', exp: 'General Manager · RHI', quote: 'Curiosity keeps me pushing boundaries—always exploring new ideas, learning, and finding better ways to grow and succeed.', email: 'fatima@rh-intl.com', linkedin: 'https://www.linkedin.com/in/fatima-rasheed-b8a32a16b/', photo: W + '568b63_e737e22f03424de4af2189bc4d73a6f0~mv2.jpeg' }
+    ].map(d => ({ ...d, photoBg: 'url("' + d.photo + '")' }));
+    const vid = (this.props.heroVideoUrl || '').trim();
+    const mediaStyle = { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' };
+    const heroMedia = vid
+      ? React.createElement('video', { key: 'v', src: vid, autoPlay: true, muted: true, loop: true, playsInline: true, style: mediaStyle })
+      : React.createElement('img', { key: 'i', alt: '', src: 'https://static.wixstatic.com/media/nsplsh_2d4a64325856584c513055~mv2_d_5423_3615_s_4_2.jpg/v1/fill/w_1920,h_1280,al_c,q_85/hero.jpg', style: { ...mediaStyle, animation: 'rhiZoom 28s ease-in-out infinite alternate', transformOrigin: 'center' } });
+    const topics = ['Partnerships', 'Investment', 'Cem Asia', 'Real estate', 'Other'].map(t => ({ label: t, pick: () => this.setState(s => ({ form: { ...s.form, topic: t } })), bg: form.topic === t ? '#121722' : 'transparent', color: form.topic === t ? '#fff' : '#1F2533', border: form.topic === t ? '#121722' : '#C9C6BE' }));
+    return {
+      wide, narrow: !wide, nav, companies, ventures, values, directors, heroMedia,
+      noVideo: !vid, activeNum: String(Math.max(openValue, 0) + 1).padStart(2, '0'),
+      isHome: page === 'home', isAbout: page === 'about', isPortfolio: page === 'portfolio', isContact: page === 'contact', showCta: page !== 'contact',
+      goHome: () => this.go('home'), goAbout: () => this.go('about'), goPortfolio: () => this.go('portfolio'), goContact: () => this.go('contact'),
+      menuOpen: menu, menuLabel: menu ? 'Close' : 'Menu', toggleMenu: () => this.setState({ menu: !menu }),
+      f: form, topics, sent, notSent: !sent, formError: err,
+      setName: this.setF('name'), setEmail: this.setF('email'), setCompany: this.setF('company'), setMessage: this.setF('message'),
+      submit: () => { const ok = form.name.trim() && /\S+@\S+\.\S+/.test(form.email) && form.message.trim(); ok ? this.setState({ sent: true, err: false }) : this.setState({ err: true }); },
+      reset: () => this.setState({ sent: false, form: { name: '', email: '', company: '', message: '', topic: 'Partnerships' } }),
+      figures: [
+        { value: '$2bn+', label: 'Sales turnover', source: 'Cem Asia Trading' },
+        { value: '40M+', label: 'Tonnes of cementitious products', source: 'Since 2012' },
+        { value: '1,500+', label: 'Shipments handled', source: 'Far East · Middle East · Africa' },
+        { value: '$7m+', label: 'Property valuation', source: 'Rasheed International Estates' }
+      ],
+      timeline: [
+        { year: '2012', title: 'Cem Asia Trading', text: 'Founded as a specialized cementitious trading and shipping company.' },
+        { year: '2019', title: 'Rasheed Holdings International', text: 'The family holding company is established.' },
+        { year: '2024', title: 'Rasheed International Estates', text: 'Expansion into residential property across Malta.' },
+        { year: '2026', title: 'Aangan Studio', text: 'A community-first fitness studio opens in Msida.' }
+      ].map((t, i, a) => ({ ...t, color: i === a.length - 1 ? '#3F97D3' : '#1F2533' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
