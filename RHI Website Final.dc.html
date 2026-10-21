@@ -19,7 +19,6 @@ body{margin:0;background:#F7F6F3;color:#2B3140;font-family:'Archivo',Helvetica,A
 a{color:#2F86C4;text-decoration:none}
 a:hover{color:#1F2533}
 *{box-sizing:border-box}
-@keyframes rhiMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes rhiZoom{from{transform:scale(1.02)}to{transform:scale(1.14) translate(-1.5%,-1%)}}
 @media (prefers-reduced-motion: reduce){[data-hero-zoom]{animation:none!important}}
 </style>
@@ -72,7 +71,7 @@ a:hover{color:#1F2533}
   <section data-screen-label="Home — Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#121722;color:#fff">
     <div style="position:absolute;inset:0;overflow:hidden">{{ heroMedia }}</div>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,23,34,.25) 0%,rgba(18,23,34,.2) 35%,rgba(18,23,34,.92) 100%)"></div>
-    <div style="position:relative;padding:clamp(80px,12vh,140px) clamp(24px,5vw,72px) 0;display:flex;flex-direction:column;gap:28px;max-width:1240px">
+    <div style="position:relative;padding:clamp(80px,12vh,140px) clamp(24px,5vw,72px) clamp(48px,8vh,88px);display:flex;flex-direction:column;gap:28px;max-width:1240px">
       <div data-reveal="0" style="display:flex;align-items:center;gap:14px">
         <span style="width:40px;height:2px;background:#3F97D3;display:block"></span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#CFE6F6">Family holding company · Est. 2019</span>
@@ -86,16 +85,7 @@ a:hover{color:#1F2533}
         </div>
       </div>
     </div>
-    <div style="position:relative;margin-top:clamp(40px,7vh,72px);border-top:1px solid rgba(255,255,255,.18);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
-      <sc-for list="{{ ventures }}" as="v" hint-placeholder-count="4">
-        <div data-reveal="{{ $index }}" onClick="{{ goPortfolio }}" style="cursor:pointer;padding:22px clamp(24px,2.5vw,36px);border-right:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:6px" style-hover="background:rgba(255,255,255,.06)">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">{{ v.num }} · {{ v.sector }}</span>
-          <span style="font-size:16px;font-weight:600;color:#fff">{{ v.name }}</span>
-        </div>
-      </sc-for>
-    </div>
   </section>
-  {{ marquee }}
 
   <section data-screen-label="Home — Overview" style="padding:clamp(64px,10vw,128px) clamp(24px,5vw,72px);display:flex;flex-direction:column;gap:48px">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px 64px;align-items:end">
@@ -425,15 +415,6 @@ class Component extends DCLogic {
       fine && React.createElement('div', { key: 'ring', ref: this.ringRef, style: { ...base, width: 38, height: 38, border: '1.5px solid #3F97D3', transition: 'background .25s, scale .25s' } }));
     return this._fx;
   }
-  marqueeEl() {
-    if (this._mq) return this._mq;
-    const items = ['Clinker', 'GBFS', 'Iron Ore', 'Coal', 'Shipping', 'Real Estate', 'Capital', 'Wellness', 'Malta', 'Far East', 'Middle East', 'Africa'];
-    const run = k => items.map((t, i) => React.createElement('span', { key: k + i, style: { display: 'inline-flex', alignItems: 'center', gap: 36, paddingRight: 36 } }, t, React.createElement('span', { style: { width: 10, height: 10, background: '#1F2533', display: 'inline-block', transform: 'rotate(45deg)' } })));
-    const track = React.createRef();
-    this._mq = React.createElement('div', { onMouseEnter: () => track.current && (track.current.style.animationPlayState = 'paused'), onMouseLeave: () => track.current && (track.current.style.animationPlayState = 'running'), style: { background: '#3F97D3', color: '#fff', overflow: 'hidden', padding: '22px 0', whiteSpace: 'nowrap' } },
-      React.createElement('div', { ref: track, style: { display: 'inline-flex', animation: 'rhiMarquee 38s linear infinite', fontSize: 'clamp(22px,2.4vw,34px)', fontWeight: 700, letterSpacing: '-.01em' } }, run('a'), run('b')));
-    return this._mq;
-  }
   talkEl() {
     if (this._tk) return this._tk;
     const bounce = e => e.currentTarget.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-24px) rotate(-8deg)', color: '#3F97D3' }, { transform: 'translateY(0) rotate(0)' }], { duration: 650, easing: 'cubic-bezier(.3,1.6,.5,1)' });
@@ -483,14 +464,13 @@ class Component extends DCLogic {
       { name: 'Maryam Rasheed', role: 'Graduate of NYU and UPenn.', exp: 'Sustainability consulting', quote: 'I’m passionate about creating meaningful change—helping businesses make a positive impact on the communities they touch.', email: 'maryam@rh-intl.com', linkedin: 'https://www.linkedin.com/in/maryam-rasheed-56043694/', photo: W + '568b63_1de4ac97dee5409996b8465fa3881e78~mv2.jpeg' },
       { name: 'Fatima Rasheed', role: 'General Manager, RHI. Graduate of NYU Stern and UCL.', exp: 'General Manager', quote: 'Curiosity keeps me pushing boundaries—always exploring new ideas, learning, and finding better ways to grow and succeed.', email: 'fatima@rh-intl.com', linkedin: 'https://www.linkedin.com/in/fatima-rasheed-b8a32a16b/', photo: W + '568b63_e737e22f03424de4af2189bc4d73a6f0~mv2.jpeg' }
     ];
-    const ventures = companies.map(c => ({ num: c.num, name: c.name, sector: c.sector.split(' · ')[0] }));
     const vid = (this.props.heroVideoUrl || '').trim();
     const mediaStyle = { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' };
     const heroMedia = vid
       ? React.createElement('video', { key: 'v', src: vid, autoPlay: true, muted: true, loop: true, playsInline: true, style: mediaStyle })
       : React.createElement('img', { key: 'i', alt: '', 'data-hero-zoom': '', src: 'assets/hero.webp', style: { ...mediaStyle, animation: 'rhiZoom 28s ease-in-out infinite alternate', transformOrigin: 'center' } });
     return {
-      wide, narrow: !wide, fx: this.fxEl(), marquee: this.marqueeEl(), talk: this.talkEl(), nav, companies, ventures, values, directors, heroMedia,
+      wide, narrow: !wide, fx: this.fxEl(), talk: this.talkEl(), nav, companies, values, directors, heroMedia,
       isHome: page === 'home', isAbout: page === 'about', isPortfolio: page === 'portfolio',
       goHome: () => this.go('home'), goAbout: () => this.go('about'), goPortfolio: () => this.go('portfolio'), goContact: () => this.go('contact'), isContact: page === 'contact',
       f: form, sent, notSent: !sent, formError: err,
