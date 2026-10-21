@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>RH International — Design Review</title>
+  <title>RH International — Website</title>
+  <link rel="icon" type="image/png" href="assets/rhi-favicon.png">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #f4f3ee; color: #152232; font-family: Arial, sans-serif; }
     main { max-width: 1100px; margin: auto; padding: 64px 24px; }
-    header { display: flex; align-items: center; gap: 18px; margin-bottom: 70px; }
-    header img { width: 64px; height: 64px; border-radius: 12px; object-fit: contain; }
-    .brand { font-size: 20px; font-weight: 700; }
+    header { display: flex; align-items: center; margin-bottom: 70px; }
+    header img { width: 260px; max-width: 100%; height: auto; display: block; }
     .eyebrow { text-transform: uppercase; letter-spacing: .18em; font-size: 12px; color: #536d83; }
     h1 { font-size: clamp(36px, 6vw, 64px); letter-spacing: -.045em; margin: 18px 0; }
     .intro { max-width: 600px; font-size: 18px; line-height: 1.7; color: #536173; }
@@ -22,6 +22,13 @@
     .number { color: #64798d; font-size: 13px; letter-spacing: .1em; }
     h2 { font-size: 30px; margin: 24px 0; }
     .action { margin-top: auto; color: #2477ac; font-weight: 700; }
+    .final { margin-top: 40px; min-height: 260px; background: #152232; border-color: #152232; color: #fff; }
+    .final:hover { border-color: #388ac0; }
+    .final .number { color: #9fc4e0; }
+    .final h2 { font-size: clamp(32px, 4.4vw, 46px); }
+    .final p { margin: 0 0 28px; max-width: 560px; color: #c9d3de; line-height: 1.6; }
+    .final .action { color: #7fc0ea; }
+    h3 { margin: 72px 0 0; font-size: 13px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; color: #536d83; }
     footer { margin-top: 40px; color: #647181; font-size: 14px; line-height: 1.7; }
     @media (max-width: 600px) { main { padding: 32px 20px; } header { margin-bottom: 48px; } .grid { grid-template-columns: 1fr; } }
     @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
@@ -29,11 +36,13 @@
 </head>
 <body>
   <main>
-    <header><img src="assets/logo.jpeg" alt="RH International logo"><span class="brand">RH International</span></header>
-    <p class="eyebrow">Website design review</p>
-    <h1>Four directions. One vision.</h1>
-    <p class="intro">Explore the four website designs below. Open each version to review its layout, content, and interactions on desktop or mobile.</p>
-    <nav class="grid" aria-label="Website designs">
+    <header><img src="assets/rhi-logo-horizontal.png" alt="Rasheed Holdings International"></header>
+    <p class="eyebrow">Website</p>
+    <h1>The final design.</h1>
+    <p class="intro">The final website combines the layout of Design 2 with the hero from Design 1. Open it to review on desktop or mobile.</p>
+    <a class="card final" href="RHI%20Website%20Final.dc.html"><span class="number">FINAL</span><h2>Rasheed Holdings International</h2><p>Design 2 with the Design 1 hero and the new RHI logos.</p><span class="action">Open website &rarr;</span></a>
+    <h3>Earlier design directions</h3>
+    <nav class="grid" aria-label="Earlier website designs">
       <a class="card" href="RHI%20Website%20v2.dc.html"><span class="number">01 / VERSION 2</span><h2>Design 1</h2><span class="action">Explore design &rarr;</span></a>
       <a class="card" href="RHI%20Website%20v3.dc.html"><span class="number">02 / VERSION 3</span><h2>Design 2</h2><span class="action">Explore design &rarr;</span></a>
       <a class="card" href="RHI%20Website%20v4.dc.html"><span class="number">03 / VERSION 4</span><h2>Design 3</h2><span class="action">Explore design &rarr;</span></a>
