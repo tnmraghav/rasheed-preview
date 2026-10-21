@@ -385,34 +385,19 @@ class Component extends DCLogic {
   go(page) { this.setState({ page, menu: false }); try { history.replaceState(null, '', '#' + page); } catch (e) {} window.scrollTo(0, 0); }
   setF(k) { return e => { const v = e.target.value; this.setState(s => ({ form: { ...s.form, [k]: v }, err: false })); }; }
 
-  dotRef = React.createRef(); ringRef = React.createRef(); barRef = React.createRef();
+  barRef = React.createRef();
   initFun() {
     const onScroll = () => {
       const h = document.documentElement, p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
       if (this.barRef.current) this.barRef.current.style.transform = 'scaleX(' + p + ')';
     };
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
-    let mx = -100, my = -100, rx = -100, ry = -100, big = false, raf = 0;
-    const fine = window.matchMedia && matchMedia('(pointer:fine)').matches;
-    const onMove = e => { mx = e.clientX; my = e.clientY; const t = e.target; big = !!(t && t.closest && (t.closest('a,input,textarea,label') || getComputedStyle(t).cursor === 'pointer')); };
-    const loop = () => {
-      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
-      const d = this.dotRef.current, r = this.ringRef.current;
-      if (d) d.style.transform = 'translate(' + mx + 'px,' + my + 'px) translate(-50%,-50%) scale(' + (big ? 0 : 1) + ')';
-      if (r) { r.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%) scale(' + (big ? 1.8 : 1) + ')'; r.style.background = big ? 'rgba(63,151,211,.18)' : 'transparent'; }
-      raf = requestAnimationFrame(loop);
-    };
-    if (fine) { window.addEventListener('mousemove', onMove); loop(); }
-    this.funOff = () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); };
+    this.funOff = () => { window.removeEventListener('scroll', onScroll); };
   }
   fxEl() {
     if (this._fx) return this._fx;
-    const fine = typeof window !== 'undefined' && window.matchMedia && matchMedia('(pointer:fine)').matches;
-    const base = { position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 9999, borderRadius: '50%' };
     this._fx = React.createElement(React.Fragment, null,
-      React.createElement('div', { key: 'bar', ref: this.barRef, style: { position: 'fixed', left: 0, top: 0, right: 0, height: 3, background: '#3F97D3', transformOrigin: 'left', transform: 'scaleX(0)', zIndex: 60, pointerEvents: 'none' } }),
-      fine && React.createElement('div', { key: 'dot', ref: this.dotRef, style: { ...base, width: 8, height: 8, background: '#3F97D3', transition: 'transform .15s' } }),
-      fine && React.createElement('div', { key: 'ring', ref: this.ringRef, style: { ...base, width: 38, height: 38, border: '1.5px solid #3F97D3', transition: 'background .25s, scale .25s' } }));
+      React.createElement('div', { key: 'bar', ref: this.barRef, style: { position: 'fixed', left: 0, top: 0, right: 0, height: 3, background: '#3F97D3', transformOrigin: 'left', transform: 'scaleX(0)', zIndex: 60, pointerEvents: 'none' } }));
     return this._fx;
   }
   talkEl() {
