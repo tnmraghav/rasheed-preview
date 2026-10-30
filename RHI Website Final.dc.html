@@ -76,7 +76,7 @@ a:hover{color:#1F2533}
         <span style="width:40px;height:2px;background:#3F97D3;display:block"></span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#CFE6F6">Family holding company · Est. 2019</span>
       </div>
-      <h1 data-reveal="1" style="margin:0;font-size:clamp(48px,7.6vw,124px);line-height:.94;font-weight:800;letter-spacing:-.035em;text-wrap:balance">Cementing <span style="color:#5BB0E6">Legacies</span> with Continued Excellence</h1>
+      <h1 data-reveal="1" style="margin:0;font-size:clamp(48px,7.6vw,124px);line-height:.94;font-weight:800;letter-spacing:-.035em;text-wrap:balance">Cementing Legacies with Continued Excellence</h1>
       <div data-reveal="3" style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
         <p data-reveal="2" style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.55;max-width:600px;color:#E3E7ED;text-wrap:pretty">Guided by trust and integrity, Rasheed Holdings has built a solid foundation across global cement trading and shipping, international property management, and strategic financial investments.</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap">
@@ -186,7 +186,7 @@ a:hover{color:#1F2533}
       <p style="margin:0;font-size:17px;line-height:1.6;color:#5A6070;max-width:520px">As a family-owned company, we prioritize trust, collaboration, and shared values in everything we do.</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:40px 28px">
-      <sc-for list="{{ directors }}" as="d" hint-placeholder-count="4">
+      <sc-for list="{{ team }}" as="d" hint-placeholder-count="4">
         <div style="display:flex;flex-direction:column;gap:16px">
           <div style="display:flex;flex-direction:column;gap:6px">
             <h3 style="margin:0;font-size:21px;font-weight:700;color:#1F2533">{{ d.name }}</h3>
@@ -305,10 +305,9 @@ a:hover{color:#1F2533}
 </main>
 
 <footer style="background:#161B26;color:#C9CED8;padding:clamp(56px,7vw,88px) clamp(24px,5vw,72px) 32px;display:flex;flex-direction:column;gap:56px">
-  <div style="display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #2C3342;padding-bottom:48px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FC0EA">Got a project in mind? Hover me, then click.</span>{{ talk }}</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px">
     <div style="display:flex;flex-direction:column;gap:20px">
-      <div onClick="{{ goHome }}" style="cursor:pointer;align-self:flex-start;max-width:100%;background:#fff;padding:14px 18px"><img src="assets/rhi-logo-horizontal.png" alt="Rasheed Holdings International" style="display:block;width:240px;max-width:100%;height:auto"></div>
+      <div onClick="{{ goHome }}" style="cursor:pointer;align-self:flex-start;max-width:100%;background:#E8F2FA;padding:14px 18px"><img src="assets/rhi-logo-horizontal.png" alt="Rasheed Holdings International" style="display:block;width:240px;max-width:100%;height:auto"></div>
       <span style="font-size:15px;line-height:1.6">Rasheed Holdings International Ltd.<br>12, Sqaq San Gwann Nru. 2,<br>Siggiewi, SGW 1471, Malta</span>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
@@ -400,13 +399,6 @@ class Component extends DCLogic {
       React.createElement('div', { key: 'bar', ref: this.barRef, style: { position: 'fixed', left: 0, top: 0, right: 0, height: 3, background: '#3F97D3', transformOrigin: 'left', transform: 'scaleX(0)', zIndex: 60, pointerEvents: 'none' } }));
     return this._fx;
   }
-  talkEl() {
-    if (this._tk) return this._tk;
-    const bounce = e => e.currentTarget.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-24px) rotate(-8deg)', color: '#3F97D3' }, { transform: 'translateY(0) rotate(0)' }], { duration: 650, easing: 'cubic-bezier(.3,1.6,.5,1)' });
-    this._tk = React.createElement('div', { onClick: () => this.go('contact'), style: { cursor: 'pointer', display: 'flex', flexWrap: 'wrap', fontSize: 'clamp(56px,11vw,180px)', fontWeight: 800, letterSpacing: '-.045em', lineHeight: 1, color: '#fff', paddingTop: 24 } },
-      "Let’s talk.".split('').map((ch, i) => React.createElement('span', { key: i, onMouseEnter: bounce, style: { display: 'inline-block', whiteSpace: 'pre', color: ch === '.' ? '#3F97D3' : undefined } }, ch)));
-    return this._tk;
-  }
   burst(btn) {
     if (!Element.prototype.animate) return;
     const r = btn ? btn.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 };
@@ -427,12 +419,12 @@ class Component extends DCLogic {
     const companies = [
       { name: 'Cem Asia Trading', fullName: 'Cem Asia Trading DMCC', sector: 'Trading & Shipping', figure: '$2bn+ Sales Turnover', short: 'Since 2012, it has dealt with over 40 million tonnes of cementitious products and handled 1,500+ shipments.',
         paras: ['Cem Asia is a specialized trading and shipping company handling cementitious commodities including Clinker, GBFS, Iron Ore, Coal, and more.', 'Since 2012, it has dealt with over 40 million tonnes of cementitious products. With a presence across the Far East, Middle East, and Africa, Cem Asia has handled over 1,500+ shipments since its inception in 2012.'],
-        stats: [{ v: '$2bn+', l: 'Sales turnover' }, { v: '40M+', l: 'Tonnes traded' }, { v: '1,500+', l: 'Shipments' }], link: 'https://www.cem-asia.com/', linkLabel: 'cem-asia.com', image: 'assets/cem-asia-trading.webp', imageAlt: 'A bulk carrier moored at a port, with loading cranes along the quay' },
-      { name: 'Rasheed International Estates', fullName: 'Rasheed International Estates', sector: 'Real Estate', figure: '$7m+ Valuation', short: 'Established in 2024 to invest and develop residential, commercial, and mixed-use properties in Malta and beyond.',
+        stats: [{ v: '$2bn+', l: 'Sales turnover' }, { v: '40M+', l: 'Tonnes traded' }, { v: '1,500+', l: 'Shipments' }], link: 'https://www.cem-asia.com/', linkLabel: 'cem-asia.com', image: 'assets/cem-asia-trading.webp', imageAlt: 'A bulk carrier at anchor off the coast at dusk' },
+      { name: 'Rasheed International Estates', fullName: 'Rasheed International Estates', sector: 'Real Estate', figure: '$8m Valuation', short: 'Established in 2024 to invest and develop residential, commercial, and mixed-use properties in Malta and beyond.',
         paras: ['Rasheed International Estates was established in 2024 to invest and develop residential, commercial, and mixed-use properties in Malta and beyond. Its mission is to deliver value-driven real estate solutions by carefully selecting properties that offer long-term growth potential.'],
-        stats: [{ v: '$7m+', l: 'Portfolio valuation' }, { v: '2024', l: 'Established' }], image: 'assets/rasheed-international-estates.webp', imageAlt: 'Traditional Maltese limestone buildings with enclosed timber balconies' },
-      { name: 'Rasheed Capital', fullName: 'Rasheed Capital', sector: 'Financial Investments', figure: 'Julius Baer · UBS · Bank of Valletta', short: 'The family investment arm, focusing on strategic financial investments and long-term returns.',
-        paras: ['Rasheed Capital focuses on building a diversified portfolio across various different financial assets and regions. Our advisory and investment financial institutions include Julius Baer, UBS, and Bank of Valletta.'], image: 'assets/rasheed-capital.webp', imageAlt: 'Blue glass facades of a modern building seen from below' },
+        stats: [{ v: '$8m', l: 'Portfolio valuation' }, { v: '2024', l: 'Established' }], image: 'assets/rasheed-international-estates.webp', imageAlt: 'Aerial view of seafront buildings and a marina in St Julian’s, Malta' },
+      { name: 'Rasheed Capital', fullName: 'Rasheed Capital', sector: 'Financial Investments', figure: 'Equities · Fixed Income · Derivatives', short: 'The family investment arm, focusing on strategic financial investments and long-term returns.',
+        paras: ['Rasheed Capital focuses on building a diversified portfolio across different asset classes and global markets. We monitor market trends and seek investment opportunities that support long-term wealth creation, prioritising stable income, capital preservation and sustainable returns.'], image: 'assets/rasheed-capital.webp', imageAlt: 'Blue glass facades of a modern building seen from below' },
       { name: 'Aangan Studio', fullName: 'Aangan Studio', sector: 'Wellness · Opening late 2026', figure: 'Msida, Malta', short: 'Premium low impact, high intensity fitness studio with community events — fitness for every body, every season of life.',
         paras: ['Launching late 2026, Aangan Studio is a low impact, high intensity fitness studio in Msida, Malta. Aangan is a community-first fitness space, bringing its signature Form machine and intentional workout method to Malta.'], link: 'https://aangan-studio.com/', linkLabel: 'aangan-studio.com', image: 'assets/aangan-studio.webp', imageAlt: 'The Aangan studio, a bright room with exercise mats laid out' }
     ].map((c, i) => ({ ...c, num: String(i + 1).padStart(2, '0'), order: wide && i % 2 ? 2 : 0, hasStats: !!c.stats, stats: c.stats || [], hasLink: !!c.link, enter: () => this.setState({ hov: i }), leave: () => this.setState(st => st.hov === i ? { hov: -1 } : null), shift: this.state.hov === i ? '14px' : '0px', arrowOp: this.state.hov === i ? 1 : 0, rowBg: this.state.hov === i ? '#EFEDE8' : 'transparent' }));
@@ -449,13 +441,14 @@ class Component extends DCLogic {
       { name: 'Maryam Rasheed', role: 'Graduate of NYU and UPenn.', exp: 'Sustainability consulting', quote: 'I’m passionate about creating meaningful change—helping businesses make a positive impact on the communities they touch.', email: 'maryam@rh-intl.com', linkedin: 'https://www.linkedin.com/in/maryam-rasheed-56043694/', photo: W + '568b63_1de4ac97dee5409996b8465fa3881e78~mv2.jpeg' },
       { name: 'Fatima Rasheed', role: 'General Manager, RHI. Graduate of NYU Stern and UCL.', exp: 'General Manager', quote: 'Curiosity keeps me pushing boundaries—always exploring new ideas, learning, and finding better ways to grow and succeed.', email: 'fatima@rh-intl.com', linkedin: 'https://www.linkedin.com/in/fatima-rasheed-b8a32a16b/', photo: W + '568b63_e737e22f03424de4af2189bc4d73a6f0~mv2.jpeg' }
     ];
+    const team = [...directors, { name: 'Althea Correia', role: 'CFO of Cem Asia Trading and Financial Advisor for RHI.', exp: '20+ years in financial services', quote: 'I believe in the power of teamwork, continuous growth and taking initiative. Success comes from adaptability, strong relationships, attention to detail and the determination to see things through.', email: 'althea@cem-asia.com', linkedin: 'https://www.linkedin.com/in/althea-correia-0554577a/' }];
     const vid = (this.props.heroVideoUrl || '').trim();
     const mediaStyle = { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' };
     const heroMedia = vid
       ? React.createElement('video', { key: 'v', src: vid, autoPlay: true, muted: true, loop: true, playsInline: true, style: mediaStyle })
       : React.createElement('img', { key: 'i', alt: '', 'data-hero-zoom': '', src: 'assets/hero.webp', style: { ...mediaStyle, animation: 'rhiZoom 28s ease-in-out infinite alternate', transformOrigin: 'center' } });
     return {
-      wide, narrow: !wide, fx: this.fxEl(), talk: this.talkEl(), nav, companies, values, directors, heroMedia,
+      wide, narrow: !wide, fx: this.fxEl(), nav, companies, values, directors, team, heroMedia,
       isHome: page === 'home', isAbout: page === 'about', isPortfolio: page === 'portfolio',
       goHome: () => this.go('home'), goAbout: () => this.go('about'), goPortfolio: () => this.go('portfolio'), goContact: () => this.go('contact'), isContact: page === 'contact',
       f: form, sent, notSent: !sent, formError: err,
@@ -468,7 +461,7 @@ class Component extends DCLogic {
         { value: '$2bn+', label: 'Sales turnover', source: 'Cem Asia Trading' },
         { value: '40M+', label: 'Tonnes of cementitious products', source: 'Since 2012' },
         { value: '1,500+', label: 'Shipments handled', source: 'Far East · Middle East · Africa' },
-        { value: '$7m+', label: 'Property valuation', source: 'Rasheed International Estates' }
+        { value: '$8m', label: 'Property valuation', source: 'Rasheed International Estates' }
       ],
       timeline: [
         { year: '2012', text: 'Cem Asia Trading founded — cementitious trading and shipping.' },
