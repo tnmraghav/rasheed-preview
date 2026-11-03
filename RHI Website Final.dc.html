@@ -185,7 +185,7 @@ a:hover{color:#1F2533}
       <h2 data-reveal="" style="margin:0;font-size:clamp(32px,3.6vw,52px);line-height:1.05;font-weight:700;letter-spacing:-.02em;color:#1F2533">Our Team</h2>
       <p style="margin:0;font-size:17px;line-height:1.6;color:#5A6070;max-width:520px">As a family-owned company, we prioritize trust, collaboration, and shared values in everything we do.</p>
     </div>
-    <div style="display:grid;grid-template-columns:{{ teamCols }};gap:40px 28px">
+    <div style="display:grid;grid-template-columns:{{ teamCols }};gap:40px 64px">
       <sc-for list="{{ team }}" as="d" hint-placeholder-count="4">
         <div style="display:flex;flex-direction:column;gap:16px">
           <div style="display:flex;flex-direction:column;gap:6px">
@@ -449,7 +449,8 @@ class Component extends DCLogic {
       wide, narrow: !wide, fx: this.fxEl(), nav, companies, values, directors, team, heroMedia,
       // Below 900px the 77px top bar sits above the hero; svh keeps the buttons above the phone's browser toolbar.
       heroMin: wide ? '100vh' : 'calc(100svh - 77px)', valuesPos: valuesSide ? 'sticky' : 'static', valuesTop: wide ? '40px' : '117px',
-      teamCols: w >= 1280 ? 'repeat(5,minmax(0,1fr))' : 'repeat(auto-fill,minmax(min(100%,240px),1fr))',
+      // Two to a row (Jawad and Parveen, Maryam and Fatima, then Althea), as the client asked; one per row on phones.
+      teamCols: w >= 600 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)',
       isHome: page === 'home', isAbout: page === 'about', isPortfolio: page === 'portfolio',
       goHome: () => this.go('home'), goAbout: () => this.go('about'), goPortfolio: () => this.go('portfolio'), goContact: () => this.go('contact'), isContact: page === 'contact',
       f: form, sent, notSent: !sent, formError: err,
