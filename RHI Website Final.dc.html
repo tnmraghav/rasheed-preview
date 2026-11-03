@@ -185,18 +185,21 @@ a:hover{color:#1F2533}
       <h2 data-reveal="" style="margin:0;font-size:clamp(32px,3.6vw,52px);line-height:1.05;font-weight:700;letter-spacing:-.02em;color:#1F2533">Our Team</h2>
       <p style="margin:0;font-size:17px;line-height:1.6;color:#5A6070;max-width:520px">As a family-owned company, we prioritize trust, collaboration, and shared values in everything we do.</p>
     </div>
-    <div style="display:grid;grid-template-columns:{{ teamCols }};gap:40px 64px">
+    <div style="display:grid;grid-template-columns:{{ teamCols }};gap:24px">
       <sc-for list="{{ team }}" as="d" hint-placeholder-count="4">
-        <div style="display:flex;flex-direction:column;gap:16px">
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <h3 style="margin:0;font-size:21px;font-weight:700;color:#1F2533">{{ d.name }}</h3>
-            <span style="font-size:14px;line-height:1.5;color:#4A5060">{{ d.role }}</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#2F86C4">{{ d.exp }}</span>
+        <div style="display:flex;flex-direction:column;gap:22px;padding:clamp(24px,3vw,36px);background:#fff;border:1px solid #E2E0DA;grid-column:{{ d.col }};justify-self:{{ d.justify }};width:{{ d.width }}">
+          <div style="display:flex;align-items:flex-start;gap:16px">
+            <span aria-hidden="true" style="display:grid;place-items:center;flex:0 0 48px;height:48px;background:#1F2533;color:#fff;font-size:15px;font-weight:700;letter-spacing:.06em">{{ d.initials }}</span>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h3 style="margin:0;font-size:21px;font-weight:700;color:#1F2533">{{ d.name }}</h3>
+              <span style="font-size:14px;line-height:1.5;color:#4A5060">{{ d.role }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#2F86C4">{{ d.exp }}</span>
+            </div>
           </div>
-          <p style="margin:0;font-size:15px;line-height:1.6;color:#1F2533;font-style:italic;text-wrap:pretty">“{{ d.quote }}”</p>
-          <div style="display:flex;gap:16px;font-size:14px;font-weight:600;flex-wrap:wrap">
+          <p style="margin:0;padding-left:16px;border-left:2px solid #3F97D3;font-size:15px;line-height:1.6;color:#1F2533;font-style:italic;text-wrap:pretty">“{{ d.quote }}”</p>
+          <div style="display:flex;align-items:baseline;gap:8px 16px;margin-top:auto;padding-top:18px;border-top:1px solid #E2E0DA;font-size:14px;font-weight:600;flex-wrap:wrap">
             <a href="mailto:{{ d.email }}">{{ d.email }}</a>
-            <a href="{{ d.linkedin }}" target="_blank">LinkedIn ↗</a>
+            <a href="{{ d.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
           </div>
         </div>
       </sc-for>
@@ -439,7 +442,12 @@ class Component extends DCLogic {
       { name: 'Maryam Rasheed', role: 'Graduate of NYU and UPenn.', exp: 'Sustainability consulting', quote: 'I’m passionate about creating meaningful change—helping businesses make a positive impact on the communities they touch.', email: 'maryam@rh-intl.com', linkedin: 'https://www.linkedin.com/in/maryam-rasheed-56043694/', photo: W + '568b63_1de4ac97dee5409996b8465fa3881e78~mv2.jpeg' },
       { name: 'Fatima Rasheed', role: 'General Manager, RHI. Graduate of NYU Stern and UCL.', exp: 'General Manager', quote: 'Curiosity keeps me pushing boundaries—always exploring new ideas, learning, and finding better ways to grow and succeed.', email: 'fatima@rh-intl.com', linkedin: 'https://www.linkedin.com/in/fatima-rasheed-b8a32a16b/', photo: W + '568b63_e737e22f03424de4af2189bc4d73a6f0~mv2.jpeg' }
     ];
-    const team = [...directors, { name: 'Althea Correia', role: 'Financial Advisor for RHI.', exp: '20+ years in financial services', quote: 'I believe in the power of teamwork, continuous growth and taking initiative. Success comes from adaptability, strong relationships, attention to detail and the determination to see things through.', email: 'althea@cem-asia.com', linkedin: 'https://www.linkedin.com/in/althea-correia-0554577a/' }];
+    const people = [...directors, { name: 'Althea Correia', role: 'Financial Advisor for RHI.', exp: '20+ years in financial services', quote: 'I believe in the power of teamwork, continuous growth and taking initiative. Success comes from adaptability, strong relationships, attention to detail and the determination to see things through.', email: 'althea@cem-asia.com', linkedin: 'https://www.linkedin.com/in/althea-correia-0554577a/' }];
+    // An odd last card (Althea) is centred on its own row rather than leaving half of it empty.
+    const team = people.map((d, i) => {
+      const lone = w >= 600 && i === people.length - 1 && i % 2 === 0;
+      return { ...d, initials: d.name.split(' ').map(part => part[0]).join(''), col: lone ? '1 / -1' : 'auto', justify: lone ? 'center' : 'stretch', width: lone ? 'calc((100% - 24px) / 2)' : 'auto' };
+    });
     const vid = (this.props.heroVideoUrl || '').trim();
     const mediaStyle = { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' };
     const heroMedia = vid
